@@ -28,8 +28,8 @@ Function Get-OneDriveAuthToken {
     Param
     (
         # The ID of the application to get authorization for. The default is the ID of the 'OLExpenses' application.
-        [Parameter(Position=1,
-                   Mandatory=$True,
+        [Parameter(Mandatory=$True,
+                   Position=1,
                    ValueFromPipeline=$True)]
         [string]$ApplicationId,
 
@@ -100,12 +100,14 @@ Function Get-OneDriveAuthToken {
             Write-Error (${Global:$tempVar} -split '#')[1]
         } else {
             $token = [pscustomobject]@{
-                Token  = [regex]::Match(${Global:$tempVar}, "access_token=(.+?)&").Groups[1].Value
-                Type   = [regex]::Match(${Global:$tempVar}, "token_type=(.+?)&").Groups[1].Value
-                Expiry = [regex]::Match(${Global:$tempVar}, "expires_in=(.+?)&").Groups[1].Value
-                Scope  = [regex]::Match(${Global:$tempVar}, "scope=(.+?)&").Groups[1].Value
-                UserId = [regex]::Match(${Global:$tempVar}, "user_id=(.+?)(&|$)").Groups[1].Value
+                Token    = [regex]::Match(${Global:$tempVar}, "access_token=(.+?)&").Groups[1].Value
+                Type     = [regex]::Match(${Global:$tempVar}, "token_type=(.+?)&").Groups[1].Value
+                Expiry   = [regex]::Match(${Global:$tempVar}, "expires_in=(.+?)&").Groups[1].Value
+                ExpiryDT = ''
+                Scope    = [regex]::Match(${Global:$tempVar}, "scope=(.+?)&").Groups[1].Value
+                UserId   = [regex]::Match(${Global:$tempVar}, "user_id=(.+?)(&|$)").Groups[1].Value
             }
+            $token.ExpiryDT = (Get-Date) + (New-TimeSpan -Seconds $token.Expiry)
             $token.PsObject.TypeNames.Insert(0, "OneDriveToken")
         }
 
