@@ -8,19 +8,19 @@
 # https://creativecommons.org/licenses/by-nc-sa/4.0/
 ################################################################################
 
-Function Invoke-OneDriveApi {
+Function Invoke-OneDriveApiCall {
     <#
         .SYNOPSIS
         Wrapper for Invoke-RestMethod to send commands to the OneDrive API.
         
         .EXAMPLE
-        Invoke-OneDriveApi -Path $path -Token $token.Token
+        Invoke-OneDriveApiCall -Path $path -Token $token.Token
 
         .EXAMPLE
-        'drive', 'drives' | Invoke-OneDriveApi -Token $token.Token
+        'drive', 'drives' | Invoke-OneDriveApiCall -Token $token.Token
 
         .EXAMPLE
-        $token | Invoke-OneDriveApi -Path 'drive/view.recent'
+        $token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
     #>
     [CmdletBinding()]
     [OutputType([PsObject])]
@@ -88,21 +88,21 @@ Function Invoke-OneDriveApi {
     
 }
 
-Export-ModuleMember -Function 'Invoke-OneDriveApi'
+Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
 
 #$token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
 #$path = 'drive'
-#Invoke-OneDriveApi -Path $path -Token $token.Token
-#'drive', 'drive' | Invoke-OneDriveApi -Token $token.Token
-#$token | Invoke-OneDriveApi -Path 'drive/view.recent'
+#Invoke-OneDriveApiCall -Path $path -Token $token.Token
+#'drive', 'drive' | Invoke-OneDriveApiCall -Token $token.Token
+#$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
 <#
 [pscustomobject]@{
     Path  = 'drive/shared'
     Token = $token.Token
-} | Invoke-OneDriveApi
+} | Invoke-OneDriveApiCall
 #>
 <#
-Invoke-OneDriveApi -Path 'drive/root:/Documents:/children'`
+Invoke-OneDriveApiCall -Path 'drive/root:/Documents:/children'`
                    -Token $token.Token `
                    -Method Post `
                    -Body ([ordered]@{
