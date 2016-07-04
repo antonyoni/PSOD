@@ -56,9 +56,8 @@ Function Invoke-OneDriveApiCall {
     )
 
     Process {
-
-        $baseUri    = New-Object uri($ApiUrlRoot)
-        $requestUri = New-Object uri($baseUri, $Path)
+        
+        $requestUri = JoinPath $ApiUrlRoot $Path
 
         Write-Verbose "Request URI:`n$requestUri"
 
