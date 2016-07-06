@@ -11,27 +11,29 @@
 Function Get-OneDriveItem {
     <#
         .SYNOPSIS
-        
+        Gets item (folder/file) details from the OneDrive API.
         
         .EXAMPLE
-        
+        Get-OneDriveItem $token.Token
+
+        .EXAMPLE
+        "Documents" | Get-OneDriveItem $token.Token -Recurse
     #>
     [CmdletBinding()]
     [OutputType([PsObject])]
     Param
     (
-        # API resource path.
+        # The API authentication token.
         [Parameter(Mandatory=$True,
-                   Position=1,
+                   Position=1)]
+        [string]$Token,
+
+        # API resource path.
+        [Parameter(Mandatory=$False,
+                   Position=2,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True)]
         [string]$Path,
-
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipelineByPropertyName=$True)]
-        [OneDriveToken]$Token,
 
         # The API path for the user's default drive's root. 'drive/root:/'. 
         [Parameter(Mandatory=$False,
@@ -44,9 +46,6 @@ Function Get-OneDriveItem {
     )
 
     Process {
-
-        Write-Verbose $Path
-        Write-Verbose $Token
 
         $p = JoinPath $DriveRootPath $Path
         $p = JoinPath $p ':/children'
@@ -63,7 +62,7 @@ Function Get-OneDriveItem {
 
         if ($Recurse) {
             $rsp.value | ? { $_.folder.childCount -gt 0 } | % {
-                Get-OneDriveItem (JoinPath $Path $_.name) -Recurse
+                Get-OneDriveItem -Token $token -Path (JoinPath $Path $_.name) -Recurse
             }
         }
 
@@ -71,10 +70,13 @@ Function Get-OneDriveItem {
 
 }
 
-#Export-ModuleMember -Function 'Get-OneDriveItem'
+Export-ModuleMember -Function 'Get-OneDriveItem'
 
+<#
 if ((Get-Date) -ge $token.ExpiryDT) {
     $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
 }
-$token | Get-OneDriveItem -Verbose
-
+Get-OneDriveItem $token.Token -Verbose | select name, id, size, webUrl | Format-Table
+Get-OneDriveItem $token.Token -Recurse | select name, id, size, webUrl | Format-Table
+"Documents" | Get-OneDriveItem $token.Token -Recurse
+#>
