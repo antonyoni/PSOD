@@ -20,15 +20,20 @@ Function Save-OneDriveItem {
     [OutputType([PsObject])]
     Param
     (
+        # The API authentication token.
+        [Parameter(Mandatory=$True,
+                   Position=1)]
+        [string]$Token,
+
         # Details of the item to save.
         [Parameter(Mandatory=$True,
-                   Position=1,
+                   Position=2,
                    ValueFromPipeline=$True)]
         [psobject]$Item,
 
         # The path to the destination directory / file.
         [Parameter(Mandatory=$False,
-                   Position=2)]
+                   Position=3)]
         [string]$Destination
     )
 
@@ -39,10 +44,13 @@ Function Save-OneDriveItem {
     }
 
     Process {
-        
-        $outFile = Join-Path $Destination $Item.name
 
-        Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing
+        if ($Item.File) {
+            $outFile = Join-Path $Destination $Item.name
+            Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing
+        } else {
+            $rec = Get-OneDriveItem -Token $token.Token -Path $Item.
+        }
 
     }
 
@@ -55,8 +63,8 @@ if ((Get-Date) -ge $token.ExpiryDT) {
     $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
 }
 $items = Get-OneDriveItem -Token $token.Token -Path "Documents\Office Lens"
-Save-OneDriveItem $items[0] -Destination C:\Temp
+Save-OneDriveItem $token.Token $items[0] -Destination C:\Temp
 $dir = Get-OneDriveItem -Token $token.Token -Path "Documents"
-Save-OneDriveItem $dir -Destination C:\Temp
+Save-OneDriveItem $token.Token $dir -Destination C:\Temp
 
 #>
