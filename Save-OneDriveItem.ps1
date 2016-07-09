@@ -49,22 +49,28 @@ Function Save-OneDriveItem {
             $outFile = Join-Path $Destination $Item.name
             Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing
         } else {
-            $rec = Get-OneDriveItem -Token $token.Token -Path $Item.
+            $path = JoinPath ($Item.parentReference.path -replace ".+:","") $Item.name
+            Write-Verbose $path
+            $newDestination = Join-Path $Destination $Item.name
+            New-Item -ItemType Directory -Path $newDestination | Out-Null
+            Get-OneDriveItem -Token $Token -Path $path | % {
+                Save-OneDriveItem -Token $Token -Item $_ -Destination $newDestination
+            }
         }
 
     }
 
 }
 
-#Export-ModuleMember -Function 'Save-OneDriveItem'
+Export-ModuleMember -Function 'Save-OneDriveItem'
 
-#<#
+<#
 if ((Get-Date) -ge $token.ExpiryDT) {
     $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
 }
-$items = Get-OneDriveItem -Token $token.Token -Path "Documents\Office Lens"
-Save-OneDriveItem $token.Token $items[0] -Destination C:\Temp
+#$items = Get-OneDriveItem -Token $token.Token -Path "Documents\Office Lens"
+#Save-OneDriveItem $token.Token $items[0] -Destination C:\Temp
 $dir = Get-OneDriveItem -Token $token.Token -Path "Documents"
-Save-OneDriveItem $token.Token $dir -Destination C:\Temp
+Save-OneDriveItem $token.Token $dir[0] -Destination C:\Temp -Verbose
 
 #>
