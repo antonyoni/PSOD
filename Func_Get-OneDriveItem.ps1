@@ -67,8 +67,8 @@ Function Get-OneDriveItem {
         if ($ItemId) {
             $p = $ItemIdPath -f $ItemId
         } else {
-            $p = JoinPath $DriveRootPath $Path
-            $p = JoinPath $p ':/children'
+            $p = joinPath $DriveRootPath $Path
+            $p = joinPath $p ':/children'
         }
 
         Write-Verbose "Sending request to '$p'"
@@ -85,7 +85,7 @@ Function Get-OneDriveItem {
 
         if ($Recurse) {
             $ret | ? { $_.folder.childCount -gt 0 } | % {
-                Get-OneDriveItem -Token $token -Path (JoinPath $Path $_.name) -Recurse
+                Get-OneDriveItem -Token $token -Path (joinPath $Path $_.name) -Recurse
             }
         }
 

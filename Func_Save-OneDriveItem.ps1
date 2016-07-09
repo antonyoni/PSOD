@@ -49,7 +49,7 @@ Function Save-OneDriveItem {
             $outFile = Join-Path $Destination $Item.name
             Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing
         } else {
-            $path = JoinPath ($Item.parentReference.path -replace ".+:","") $Item.name
+            $path = joinPath ($Item.parentReference.path -replace ".+:","") $Item.name
             Write-Verbose $path
             $newDestination = Join-Path $Destination $Item.name
             New-Item -ItemType Directory -Path $newDestination | Out-Null

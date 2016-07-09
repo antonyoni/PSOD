@@ -9,7 +9,7 @@
 ################################################################################
 
 ################################### Helpers ####################################
-Function JoinPath($Path1, $Path2) {
+Function joinPath($Path1, $Path2) {
     if (!$Path1) { $Path1 = "" }
     if (!$Path2) { $Path2 = "" }
     return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'

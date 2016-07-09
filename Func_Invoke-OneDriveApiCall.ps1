@@ -57,7 +57,7 @@ Function Invoke-OneDriveApiCall {
 
     Process {
         
-        $requestUri = JoinPath $ApiUrlRoot $Path
+        $requestUri = joinPath $ApiUrlRoot $Path
 
         Write-Verbose "Request URI:`n$requestUri"
 
