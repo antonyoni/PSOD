@@ -31,13 +31,16 @@ Function Invoke-OneDriveApiCall {
                    Position=1,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True)]
+        [Alias("ApiUrl", "Resource")]
         [string]$Path,
 
         # The API authentication token.
         [Parameter(Mandatory=$True,
                    Position=2,
+                   ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True)]
-        [string]$Token,
+        [Alias("ApiToken", "AccessToken")]
+        [OneDriveToken]$Token,
 
         # Api URL. Default is the OneDrive personal address of 'https://api.onedrive.com/v1.0/'. 
         [Parameter(Mandatory=$False,
@@ -89,20 +92,25 @@ Function Invoke-OneDriveApiCall {
 
 Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
 
-#$token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
+<#
+if ((Get-Date) -ge $token.ExpiryDate) {
+    $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
+}
+#>
 #$path = 'drive'
-#Invoke-OneDriveApiCall -Path $path -Token $token.Token
-#'drive', 'drive' | Invoke-OneDriveApiCall -Token $token.Token
+#Invoke-OneDriveApiCall -Path $path -Token $token
+#'drive', 'drive' | Invoke-OneDriveApiCall -Token $token
+#Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken | Invoke-OneDriveApiCall -Resource drive
 #$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
 <#
 [pscustomobject]@{
     Path  = 'drive/shared'
-    Token = $token.Token
+    Token = $token
 } | Invoke-OneDriveApiCall
 #>
 <#
 Invoke-OneDriveApiCall -Path 'drive/root:/Documents:/children'`
-                   -Token $token.Token `
+                   -Token $token `
                    -Method Post `
                    -Body ([ordered]@{
                        name   = 'TestFolder'

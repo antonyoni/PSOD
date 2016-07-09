@@ -24,7 +24,7 @@ Function Get-OneDriveAuthToken {
         
     #>
     [CmdletBinding()]
-    [OutputType([PsObject])]
+    [OutputType([OneDriveToken])]
     Param
     (
         # The ID of the application to get authorization for. The default is the ID of the 'OLExpenses' application.
@@ -99,16 +99,7 @@ Function Get-OneDriveAuthToken {
         if (${Global:$tempVar} -match 'error=') {
             Write-Error (${Global:$tempVar} -split '#')[1]
         } else {
-            $token = [pscustomobject]@{
-                Token    = [regex]::Match(${Global:$tempVar}, "access_token=(.+?)&").Groups[1].Value
-                Type     = [regex]::Match(${Global:$tempVar}, "token_type=(.+?)&").Groups[1].Value
-                Expiry   = [regex]::Match(${Global:$tempVar}, "expires_in=(.+?)&").Groups[1].Value
-                ExpiryDT = ''
-                Scope    = [regex]::Match(${Global:$tempVar}, "scope=(.+?)&").Groups[1].Value
-                UserId   = [regex]::Match(${Global:$tempVar}, "user_id=(.+?)(&|$)").Groups[1].Value
-            }
-            $token.ExpiryDT = (Get-Date) + (New-TimeSpan -Seconds $token.Expiry)
-            $token.PsObject.TypeNames.Insert(0, "OneDriveToken")
+            $token = New-Object OneDriveToken ${Global:$tempVar}
         }
 
         Remove-Variable -Name $tempVar -Scope Global
