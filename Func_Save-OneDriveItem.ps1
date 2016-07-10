@@ -23,7 +23,7 @@ Function Save-OneDriveItem {
         # The API authentication token.
         [Parameter(Mandatory=$True,
                    Position=1)]
-        [string]$Token,
+        [OneDriveToken]$Token,
 
         # Details of the item to save.
         [Parameter(Mandatory=$True,
@@ -65,12 +65,11 @@ Function Save-OneDriveItem {
 Export-ModuleMember -Function 'Save-OneDriveItem'
 
 <#
-if ((Get-Date) -ge $token.ExpiryDT) {
-    $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
+if ((Get-Date) -ge $token.ExpiryDate) {
+    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
 }
 #$items = Get-OneDriveItem -Token $token.Token -Path "Documents\Office Lens"
 #Save-OneDriveItem $token.Token $items[0] -Destination C:\Temp
 $dir = Get-OneDriveItem -Token $token.Token -Path "Documents"
 Save-OneDriveItem $token.Token $dir[0] -Destination C:\Temp -Verbose
-
 #>

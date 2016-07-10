@@ -94,13 +94,13 @@ Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
 
 <#
 if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
+    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
 }
 #>
 #$path = 'drive'
 #Invoke-OneDriveApiCall -Path $path -Token $token
 #'drive', 'drive' | Invoke-OneDriveApiCall -Token $token
-#Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken | Invoke-OneDriveApiCall -Resource drive
+#Get-Content .\onedrive.opt | Get-OneDriveAuthToken | Invoke-OneDriveApiCall -Resource drive
 #$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
 <#
 [pscustomobject]@{
