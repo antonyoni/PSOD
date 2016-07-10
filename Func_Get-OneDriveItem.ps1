@@ -25,8 +25,10 @@ Function Get-OneDriveItem {
     (
         # The API authentication token.
         [Parameter(Mandatory=$True,
+                   ValueFromPipeline=$True,
                    Position=1)]
-        [string]$Token,
+        [Alias("ApiToken", "AccessToken")]
+        [OneDriveToken]$Token,
 
         # API resource path.
         [Parameter(Mandatory=$False,
@@ -34,6 +36,7 @@ Function Get-OneDriveItem {
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
+        [Alias("ApiUrl", "Resource")]
         [string]$Path,
 
         # The API path for the user's default drive's root. Default is 'drive/root:/'. 
@@ -85,7 +88,7 @@ Function Get-OneDriveItem {
 
         if ($Recurse) {
             $ret | ? { $_.folder.childCount -gt 0 } | % {
-                Get-OneDriveItem -Token $token -Path (joinPath $Path $_.name) -Recurse
+                Get-OneDriveItem -Token $Token -Path (joinPath $Path $_.name) -Recurse
             }
         }
 
@@ -96,18 +99,18 @@ Function Get-OneDriveItem {
 Export-ModuleMember -Function 'Get-OneDriveItem'
 
 <#
-if ((Get-Date) -ge $token.ExpiryDT) {
-    $token = Get-Content .\PSOD\onedrive.opt | Get-OneDriveAuthToken
+if ((Get-Date) -ge $token.ExpiryDate) {
+    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
 }
 #>
 <#
-Get-OneDriveItem $token.Token -Verbose | select name, id, size, webUrl | Format-Table
-Get-OneDriveItem $token.Token -Recurse | select name, id, size, webUrl | Format-Table
-"Documents" | Get-OneDriveItem $token.Token -Recurse
+Get-OneDriveItem $token -Verbose | select name, id, size, webUrl | Format-Table
+Get-OneDriveItem $token -Recurse | select name, id, size, webUrl | Format-Table
+"Documents" | Get-OneDriveItem $token -Recurse
 #>
 <#
-Get-OneDriveItem $token.Token -ItemId '85B75A4CE0397EE!110' -Verbose
-Get-OneDriveItem $token.Token -ItemId '85B75A4CE0397EE!1436' -Verbose
-Get-OneDriveItem $token.Token -ItemId '85B75A4CE0397EE!110' -Verbose -Recurse
-Get-OneDriveItem $token.Token -ItemId '85B75A4CE0397EE!1436' -Verbose -Recurse
+$token | Get-OneDriveItem -ItemId '85B75A4CE0397EE!110' -Verbose
+Get-OneDriveItem $token -ItemId '85B75A4CE0397EE!1436' -Verbose
+Get-OneDriveItem $token -ItemId '85B75A4CE0397EE!110' -Verbose -Recurse
+Get-OneDriveItem $token -ItemId '85B75A4CE0397EE!1436' -Verbose -Recurse
 #>
