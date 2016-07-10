@@ -22,7 +22,9 @@ Function Save-OneDriveItem {
     (
         # The API authentication token.
         [Parameter(Mandatory=$True,
-                   Position=1)]
+                   Position=1,
+                   ValueFromPipeline=$True)]
+        [Alias("ApiToken", "AccessToken")]
         [OneDriveToken]$Token,
 
         # Details of the item to save.
