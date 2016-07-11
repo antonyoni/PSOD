@@ -94,7 +94,7 @@ Function Get-OneDriveItem {
 
 }
 
-Export-ModuleMember -Function 'Get-OneDriveItem'
+Export-ModuleMember -Function 'Get-OneDriveItem' -Alias 'odgi'
 
 <#
 Import-Module ..\PSOD

@@ -97,7 +97,7 @@ Function Get-OneDriveChildItem {
 
 }
 
-Export-ModuleMember -Function 'Get-OneDriveChildItem'
+Export-ModuleMember -Function 'Get-OneDriveChildItem' -Alias 'odgci', 'odls'
 
 <#
 Import-Module ..\PSOD
