@@ -11,15 +11,19 @@
 Function Get-OneDriveItem {
     <#
         .SYNOPSIS
-        Gets item (folder/file) details from the OneDrive API. By default gets the default drive's root.
+        Gets item (folder/file) details from the OneDrive API. By default gets the default drive's root. Can be used with either a relative path, or an item id.
         
         .EXAMPLE
-        Get-OneDriveItem $token
+        Get-OneDriveItem $token # return the root
 
         .EXAMPLE
         "Documents" | Get-OneDriveItem $token
+
+        .EXAMPLE
+        Get-OneDriveItem $token -ItemId "1234ABC!123"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
+    [Alias('odgi')]
     [OutputType([PsObject])]
     Param
     (
@@ -27,7 +31,7 @@ Function Get-OneDriveItem {
         [Parameter(Mandatory=$True,
                    ValueFromPipeline=$True,
                    Position=1)]
-        [Alias("ApiToken", "AccessToken")]
+        [Alias('ApiToken', 'AccessToken')]
         [OneDriveToken]$Token,
 
         # API resource path.
@@ -36,7 +40,7 @@ Function Get-OneDriveItem {
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
-        [Alias("ApiUrl", "Resource")]
+        [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
         # The API path for the user's default drive's root. Default is 'drive/root:/'. 
@@ -90,7 +94,7 @@ Function Get-OneDriveItem {
 
 }
 
-#Export-ModuleMember -Function 'Get-OneDriveItem'
+Export-ModuleMember -Function 'Get-OneDriveItem'
 
 <#
 Import-Module ..\PSOD

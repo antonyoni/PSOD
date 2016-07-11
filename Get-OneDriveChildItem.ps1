@@ -11,15 +11,19 @@
 Function Get-OneDriveChildItem {
     <#
         .SYNOPSIS
-        
+        Gets the items in the specified path, or that are children of the specified Item ID from the OneDrive API. By default gets the items in the default drive's root. Can be used with either a relative path, or an item id.
         
         .EXAMPLE
-        Get-OneDriveItem $token
+        Get-OneDriveChildItem $token # Gets all the items in the default drive's root.
 
         .EXAMPLE
-        "Documents" | Get-OneDriveItem $token
+        "Documents" | Get-OneDriveChildItem $token
+
+        .EXAMPLE
+        Get-OneDriveChildItem $token -ItemId "1234ABC!123"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
+    [Alias('odgci','odls')]
     [OutputType([PsObject])]
     Param
     (
@@ -27,7 +31,7 @@ Function Get-OneDriveChildItem {
         [Parameter(Mandatory=$True,
                    ValueFromPipeline=$True,
                    Position=1)]
-        [Alias("ApiToken", "AccessToken")]
+        [Alias('ApiToken', 'AccessToken')]
         [OneDriveToken]$Token,
 
         # API resource path.
@@ -36,7 +40,7 @@ Function Get-OneDriveChildItem {
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
-        [Alias("ApiUrl", "Resource")]
+        [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
         # The API path for the user's default drive's root. Default is 'drive/root:/'. 
@@ -80,13 +84,22 @@ Function Get-OneDriveChildItem {
 
         Write-Output $ret
 
+        if ($Recurse) {
+            $ret | ? { [int]$_.folder.childCount -gt 0 } | % {
+                Get-OneDriveChildItem -Token $Token `
+                                      -ItemId $_.id `
+                                      -ItemIdRoot $ItemIdRoot `
+                                      -Recurse
+            }
+        }
+
     }
 
 }
 
-#Export-ModuleMember -Function 'Get-OneDriveChildItem'
+Export-ModuleMember -Function 'Get-OneDriveChildItem'
 
-#<#
+<#
 Import-Module ..\PSOD
 . .\Get-OneDriveItem.ps1
 Function joinPath($Path1, $Path2) {
@@ -98,13 +111,17 @@ if ((Get-Date) -ge $token.ExpiryDate) {
     $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
 }
 #>
-#<#
+<#
 Get-OneDriveChildItem $token -Verbose | select name, id, size, webUrl | Format-Table
 "Documents" | Get-OneDriveChildItem $token -Verbose
 #$token | Get-OneDriveChildItem -Path "Documents/Office Lens" -Verbose
 #>
-#<#
+<#
 $token | Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!110' -Verbose | select name, id, size, webUrl | Format-Table
 Get-OneDriveChildItem $token -ItemId '85B75A4CE0397EE!1436' -Verbose
 #>
-$brk
+#<#
+#Get-OneDriveChildItem $token -Recurse | select name, id, size, @{name="parent";Exp={$_.parentReference.path}} | Format-Table -Auto
+#Get-OneDriveChildItem $token "Documents" -Recurse
+#$token | Get-OneDriveChildItem -Path "Documents/Office Lens" -Verbose -Recurse
+#>
