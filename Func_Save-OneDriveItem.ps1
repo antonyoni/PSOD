@@ -47,10 +47,7 @@ Function Save-OneDriveItem {
 
     Process {
 
-        if ($Item.File) {
-            $outFile = Join-Path $Destination $Item.name
-            Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing
-        } else {
+        if ($Item.folder) {
             $path = joinPath ($Item.parentReference.path -replace ".+:","") $Item.name
             Write-Verbose $path
             $newDestination = Join-Path $Destination $Item.name
@@ -58,6 +55,9 @@ Function Save-OneDriveItem {
             Get-OneDriveItem -Token $Token -Path $path | % {
                 Save-OneDriveItem -Token $Token -Item $_ -Destination $newDestination
             }
+        } else {
+            $outFile = Join-Path $Destination $Item.name
+            Invoke-WebRequest -Uri $Item.'@content.downloadUrl' -OutFile $outFile -UseBasicParsing #'
         }
 
     }
