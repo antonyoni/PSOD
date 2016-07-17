@@ -55,7 +55,12 @@ Function Invoke-OneDriveApiCall {
         # Data to be sent as part of the API request.
         [Parameter(Mandatory=$False,
                    ValueFromPipelineByPropertyName=$True)]  
-        $Body
+        $Body,
+
+        # Saves the response to the specified path.
+        [Parameter(Mandatory=$False,
+                   ValueFromPipelineByPropertyName=$True)]  
+        [string]$OutFile
     )
 
     Process {
@@ -81,6 +86,10 @@ Function Invoke-OneDriveApiCall {
 
         if ($Body) {
             $irmParams['Body'] = $Body
+        }
+
+        if ($OutFile) {
+            $irmParams['OutFile'] = $OutFile
         }
 
         $rsp = Invoke-RestMethod @irmParams
