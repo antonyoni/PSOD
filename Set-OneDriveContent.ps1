@@ -14,7 +14,7 @@ Function Set-OneDriveContent {
         Uploads a new file, or update the contents of an existing OneDrive file.
         
         .EXAMPLE
-        Set-OneDriveContent -Token $token -Path "Documents" -Source 'C:\Temp\test.pdf'
+        Set-OneDriveContent -Token $token -Path "Documents" -Source 'C:\Temp\test.pdf' -Force
 
         .EXAMPLE
         Set-OneDriveContent -Token $token -Path "Documents/aNewDirectory/" -Source 'C:\Temp\test.pdf'
@@ -70,7 +70,11 @@ Function Set-OneDriveContent {
         # The local path of the source file or directory.
         [Parameter(Mandatory=$True,
                    Position=3)]
-        [string]$Source
+        [string]$Source,
+
+        # By default, remote items are not overwritten. Set this to overwrite.
+        [Parameter(Mandatory=$False)]
+        [switch]$Force
     )
 
     Process {
@@ -124,6 +128,12 @@ Function Set-OneDriveContent {
         }
 
         Write-Verbose "Destination path: $uploadPath"
+
+        if ($Force) {
+            $uploadPath += '?@name.conflictBehavior=replace'
+        } else {
+            $uploadPath += '?@name.conflictBehavior=fail'
+        }
         
         Invoke-OneDriveApiCall -Token $Token `
                                -Path $uploadPath `
@@ -149,16 +159,21 @@ if ((Get-Date) -ge $token.ExpiryDate) {
 #>
 <#
 cd "C:\Temp"
-Set-OneDriveContent -Token $token -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose
+$newItem = Set-OneDriveContent -Token $token -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose
+$newItem
 Set-OneDriveContent -Token $token -Path "temp/another1" -Source 'C:\Temp\test1.pdf' -Verbose
 Set-OneDriveContent -Token $token -Path "temp/another2/" -Source 'C:\Temp\test1.pdf' -Verbose
 Set-OneDriveContent -Token $token -Path "temp/temp.pdf" -Source 'C:\Temp\test1.pdf' -Verbose
+#test overwrite - should fail
+Set-OneDriveContent -Token $token -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose
+Set-OneDriveContent -Token $token -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose -Force
 #upload by id of destination directory:
-Set-OneDriveContent -Token $token -ItemId "85B75A4CE0397EE!1450" -Source 'C:\Temp\test3.pdf' -Verbose
+$dir = $token | Get-OneDriveItem -Path 'temp'
+Set-OneDriveContent -Token $token -ItemId $dir.id -Source 'C:\Temp\test3.pdf' -Verbose
 #upload by id of destination file:
-$etagbf = ($token | Get-OneDriveItem -id '85B75A4CE0397EE!1451').etag
-Set-OneDriveContent -Token $token -ItemId "85B75A4CE0397EE!1451" -Source 'C:\Temp\test1.pdf' -Verbose
-$etagaf = ($token | Get-OneDriveItem -id '85B75A4CE0397EE!1451').etag
+$etagbf = ($token | Get-OneDriveItem -id $newItem.id).etag
+Set-OneDriveContent -Token $token -ItemId $newItem.id -Source 'C:\Temp\test1.pdf' -Verbose -Force
+$etagaf = ($token | Get-OneDriveItem -id $newItem.id).etag
 $etagbf
 $etagaf
 $etagbf -ne $etagaf
