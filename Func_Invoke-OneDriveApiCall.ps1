@@ -57,6 +57,11 @@ Function Invoke-OneDriveApiCall {
                    ValueFromPipelineByPropertyName=$True)]  
         $Body,
 
+        # Gets the content of the request from the specified file.
+        [Parameter(Mandatory=$False,
+                   ValueFromPipelineByPropertyName=$True)]  
+        [string]$InFile,
+
         # Saves the response to the specified path.
         [Parameter(Mandatory=$False,
                    ValueFromPipelineByPropertyName=$True)]  
@@ -86,6 +91,10 @@ Function Invoke-OneDriveApiCall {
 
         if ($Body) {
             $irmParams['Body'] = $Body
+        }
+
+        if ($InFile) {
+            $irmParams['InFile'] = $InFile
         }
 
         if ($OutFile) {
