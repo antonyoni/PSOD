@@ -65,7 +65,12 @@ Function Invoke-OneDriveApiCall {
         # Saves the response to the specified path.
         [Parameter(Mandatory=$False,
                    ValueFromPipelineByPropertyName=$True)]  
-        [string]$OutFile
+        [string]$OutFile,
+
+        # Additional headers for the request.
+        [Parameter(Mandatory=$False,
+                   ValueFromPipelineByPropertyName=$True)]  
+        [hashtable]$AdditionalRequestHeaders
     )
 
     Process {
@@ -77,6 +82,10 @@ Function Invoke-OneDriveApiCall {
         $requestHeaders = @{
             Authorization = "bearer $Token"
             Accept        = 'application/json'
+        }
+
+        if ($AdditionalRequestHeaders) {
+            $requestHeaders += $AdditionalRequestHeaders
         }
 
         $irmParams = @{
