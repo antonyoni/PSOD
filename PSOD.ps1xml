@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+    <Name>PSOD.OneDriveToken</Name>
+    <Members>
+      <ScriptProperty>
+        <Name>ExpiryDate</Name>
+        <GetScriptBlock>
+            $this.Created.AddSeconds($this.ExpiresIn)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>AccessToken</Name>
+              <Name>Type</Name>
+              <Name>Scope</Name>
+              <Name>UserId</Name>
+              <Name>ExpiresIn</Name>
+              <Name>ExpiryDate</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
+    </Members>
+  </Type>
+</Types>
