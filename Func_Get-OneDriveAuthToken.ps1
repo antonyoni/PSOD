@@ -24,7 +24,7 @@ Function Get-OneDriveAuthToken {
         
     #>
     [CmdletBinding()]
-    [OutputType([OneDriveToken])]
+    [OutputType("PSOD.OneDriveToken")]
     Param
     (
         # The ID of the application to get authorization for. The default is the ID of the 'OLExpenses' application.
@@ -99,7 +99,7 @@ Function Get-OneDriveAuthToken {
         if (${Global:$tempVar} -match 'error=') {
             Write-Error (${Global:$tempVar} -split '#')[1]
         } else {
-            $token = New-Object OneDriveToken ${Global:$tempVar}
+            $token = New-OneDriveToken -ResponseUrl ${Global:$tempVar}
         }
 
         Remove-Variable -Name $tempVar -Scope Global
@@ -113,6 +113,6 @@ Export-ModuleMember -Function 'Get-OneDriveAuthToken'
 
 <#
 $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken -Verbose
-$token.GetType()
+$token | Get-Member
 $token
 #>
