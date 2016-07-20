@@ -9,6 +9,12 @@
             $this.Created.AddSeconds($this.ExpiresIn)
         </GetScriptBlock>
       </ScriptProperty>
+      <ScriptMethod>
+        <Name>ToString</Name>
+        <Script>
+            $this.AccessToken
+        </Script>
+      </ScriptMethod>
       <MemberSet>
         <Name>PSStandardMembers</Name>
         <Members>
