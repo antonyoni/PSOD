@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+
+  <Controls>
+    <Control>
+      <Name>OneDriveItem-GroupFormatting</Name>
+      <CustomControl>
+        <CustomEntries>
+          <CustomEntry>
+            <CustomItem>
+              <Frame>
+                <LeftIndent>4</LeftIndent>
+                <CustomItem>
+                  <Text>Path:  </Text>
+                  <ExpressionBinding>
+                    <ScriptBlock>
+                        $_.parentReference.path
+                    </ScriptBlock>
+                  </ExpressionBinding>
+                  <NewLine/>
+                </CustomItem> 
+              </Frame>
+            </CustomItem>
+          </CustomEntry>
+        </CustomEntries>
+      </CustomControl>
+    </Control>
+  </Controls>
+
+  <ViewDefinitions>
+    <View>
+
+      <Name>PSOD.OneDriveItem</Name>
+      
+      <ViewSelectedBy>
+        <TypeName>PSOD.OneDriveItem</TypeName>
+      </ViewSelectedBy>
+
+      <GroupBy>
+        <!--<PropertyName>ParentPath</PropertyName>-->
+        <ScriptBlock>
+          $_.parentReference.path
+        </ScriptBlock>
+        <CustomControlName>OneDriveItem-GroupFormatting</CustomControlName>
+      </GroupBy>
+
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Type</Label>
+            <Width>5</Width>
+            <Alignment>left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>LastModifiedTime</Label>
+            <Width>22</Width>
+            <Alignment>right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Length</Label>
+            <Width>14</Width>
+            <Alignment>right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Name</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <ScriptBlock>
+                  if ($_.folder) {
+                    "d"
+                  } elseif ($_.package) {
+                    "p"
+                  } else {
+                    "f"
+                  }
+                </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  $dt = Get-Date $_.lastModifiedDateTime
+                  "{0,10}  {1,6}" -f $dt.ToString("d"), $dt.ToString("t")
+                </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>size</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>name</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+
+    </View>
+  </ViewDefinitions>
+</Configuration>
