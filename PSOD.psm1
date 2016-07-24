@@ -9,13 +9,6 @@
 ################################################################################
 
 ################################################################################
-################################### Helpers ####################################
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-################################################################################
 
 Add-Type -Language CSharp -TypeDefinition @"
 using System;
@@ -79,6 +72,8 @@ public class OneDriveToken {
 "@
 
 ################################################################################
+
+. (Join-Path -Path $psScriptRoot -ChildPath 'PSOD.helpers.ps1')
 
 Get-ChildItem -Path $psScriptRoot `
     | ? { $_ -match '^Func_.+$' } `
