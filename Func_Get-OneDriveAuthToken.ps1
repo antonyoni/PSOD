@@ -94,7 +94,8 @@ Function Get-OneDriveAuthToken {
 Export-ModuleMember -Function 'Get-OneDriveAuthToken'
 
 <#
-$token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken -Verbose
+. .\setup-test.ps1
+$token = Get-OneDriveAuthToken -Verbose
 $token | Get-Member
 $token
 #>
