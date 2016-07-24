@@ -1,0 +1,14 @@
+{
+    "api": {
+        "url": "https://api.onedrive.com/v1.0/"
+    },
+    "auth": {
+        "applicationId": "",
+        "signInUrl": "https://api.onedrive.com/v1.0/",
+        "callbackUrl": "https://login.live.com/oauth20_desktop.srf"
+    },
+    "drive": {
+        "pathRoot": "drive/root:/",
+        "itemRoot": "drive/items/"
+    }
+}

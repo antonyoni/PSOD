@@ -8,6 +8,19 @@
 # https://creativecommons.org/licenses/by-nc-sa/4.0/
 ################################################################################
 
+$configFile = (Join-Path -Path $psScriptRoot -ChildPath 'PSOD.config.json')
+$PSOD = ConvertFrom-Json (Get-Content $configFile -Raw)
+# if no ApplicationId in the settings file, check onedrive.opt file.
+if (!$PSOD.auth.applicationId) {
+    $appIdFile = (Join-Path -Path $psScriptRoot -ChildPath 'onedrive.opt')
+    if (Test-Path $appIdFile) {
+        $PSOD.auth.applicationId = Get-Content $appIdFile -Raw
+    }
+}
+Export-ModuleMember -Variable PSOD
+
+################################################################################
+
 . (Join-Path -Path $psScriptRoot -ChildPath 'PSOD.helpers.ps1')
 
 ################################################################################
