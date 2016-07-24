@@ -32,7 +32,7 @@ Function Remove-OneDriveItem {
                    ValueFromPipeline=$True,
                    Position=1)]
         [Alias('ApiToken', 'AccessToken')]
-        [OneDriveToken]$Token,
+        [PsObject]$Token,
 
         # API resource path.
         [Parameter(Mandatory=$False,
@@ -89,17 +89,7 @@ Function Remove-OneDriveItem {
 
 Export-ModuleMember -Function 'Remove-OneDriveItem' -Alias 'odrm', 'oddel'
 
-<#
-Import-Module ..\PSOD
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
-}
-#>
+#. .\setup-test.ps1
 <#
 Remove-OneDriveItem $token "temp/another1"
 Remove-OneDriveItem $token "temp/another2"

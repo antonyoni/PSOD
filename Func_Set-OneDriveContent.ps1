@@ -35,7 +35,7 @@ Function Set-OneDriveContent {
                    ValueFromPipeline=$True,
                    Position=1)]
         [Alias('ApiToken', 'AccessToken')]
-        [OneDriveToken]$Token,
+        [PsObject]$Token,
 
         # API resource destination path.
         [Parameter(Mandatory=$True,
@@ -146,17 +146,7 @@ Function Set-OneDriveContent {
 
 Export-ModuleMember -Function 'Set-OneDriveContent' -Alias 'odsc'
 
-<#
-Import-Module ..\PSOD
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
-}
-#>
+#. .\setup-test.ps1
 <#
 cd "C:\Temp"
 $newItem = Set-OneDriveContent -Token $token -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose

@@ -32,7 +32,7 @@ Function Copy-OneDriveItem {
                    ValueFromPipeline=$True,
                    Position=1)]
         [Alias('ApiToken', 'AccessToken')]
-        [OneDriveToken]$Token,
+        [PsObject]$Token,
 
         # API resource path.
         [Parameter(Mandatory=$False,
@@ -103,17 +103,7 @@ Function Copy-OneDriveItem {
 
 Export-ModuleMember -Function 'Copy-OneDriveItem' -Alias 'odcp', 'odcopy'
 
-<#
-Import-Module ..\PSOD
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
-}
-#>
+#. .\setup-test.ps1
 <#
 Copy-OneDriveItem $token "temp/test3.pdf" "temp/dest" -Verbose
 "temp/Document1.docx" | Copy-OneDriveItem $token -destination "dontexist" -Verbose

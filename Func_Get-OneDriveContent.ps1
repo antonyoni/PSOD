@@ -32,7 +32,7 @@ Function Get-OneDriveContent {
                    ValueFromPipeline=$True,
                    Position=1)]
         [Alias('ApiToken', 'AccessToken')]
-        [OneDriveToken]$Token,
+        [PsObject]$Token,
 
         # API resource path.
         [Parameter(Mandatory=$True,
@@ -111,17 +111,7 @@ Function Get-OneDriveContent {
 
 Export-ModuleMember -Function 'Get-OneDriveContent' -Alias 'odgc'
 
-<#
-Import-Module ..\PSOD
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
-}
-#>
+#. .\setup-test.ps1
 <#
 cd "C:\Temp"
 Get-OneDriveContent -Token $token -Path "Documents\Office Lens\28062016 2201 Office Lens.pdf"

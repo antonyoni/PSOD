@@ -32,7 +32,7 @@ Function Get-OneDriveItem {
                    ValueFromPipeline=$True,
                    Position=1)]
         [Alias('ApiToken', 'AccessToken')]
-        [OneDriveToken]$Token,
+        [PsObject]$Token,
 
         # API resource path.
         [Parameter(Mandatory=$False,
@@ -96,17 +96,7 @@ Function Get-OneDriveItem {
 
 Export-ModuleMember -Function 'Get-OneDriveItem' -Alias 'odgi'
 
-<#
-Import-Module ..\PSOD
-Function joinPath($Path1, $Path2) {
-    if (!$Path1) { $Path1 = "" }
-    if (!$Path2) { $Path2 = "" }
-    return $Path1.TrimEnd('/'), $Path2.TrimStart('/') -join '/'
-}
-if ((Get-Date) -ge $token.ExpiryDate) {
-    $token = Get-Content .\onedrive.opt | Get-OneDriveAuthToken
-}
-#>
+#. .\setup-test.ps1
 <#
 Get-OneDriveItem $token -Verbose | select name, id, size, webUrl | Format-Table
 "Documents" | Get-OneDriveItem $token -Verbose
