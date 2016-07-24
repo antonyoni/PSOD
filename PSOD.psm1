@@ -17,6 +17,9 @@ if (!$PSOD.auth.applicationId) {
         $PSOD.auth.applicationId = Get-Content $appIdFile -Raw
     }
 }
+Add-Member -InputObject $PSOD `
+           -NotePropertyName token `
+           -NotePropertyValue (New-Object PsObject)
 Export-ModuleMember -Variable PSOD
 
 ################################################################################

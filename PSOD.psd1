@@ -93,6 +93,7 @@ FunctionsToExport = @(
     'New-OneDriveToken'
     'Remove-OneDriveItem'
     'Set-OneDriveContent'
+    'Test-OneDriveAuthToken'
 )
 
 # Cmdlets to export from this module
