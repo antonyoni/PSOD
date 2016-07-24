@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!------------------------------------------------------------------------------
+- Author     : Antony Onipko
+- Copyright  : (c) 2016 Antony Onipko. All rights reserved.
+------------------------------------------------------------------------------
+- This work is licensed under the Creative Commons
+- Attribution-NonCommercial-ShareAlike 4.0 International License.
+- To view a copy of this license, visit
+- https://creativecommons.org/licenses/by-nc-sa/4.0/
+------------------------------------------------------------------------------->
+
 <Types>
   <Type>
     <Name>PSOD.OneDriveToken</Name>
@@ -27,6 +37,125 @@
               <Name>UserId</Name>
               <Name>ExpiresIn</Name>
               <Name>ExpiryDate</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
+    </Members>
+  </Type>
+  <Type>
+    <Name>PSOD.OneDriveItem</Name>
+    <Members>
+      <AliasProperty>
+        <Name>DownloadUrl</Name>
+        <ReferencedMemberName>@content.downloadUrl</ReferencedMemberName>
+      </AliasProperty>
+      <AliasProperty>
+        <Name>FullName</Name>
+        <ReferencedMemberName>Path</ReferencedMemberName>
+      </AliasProperty>
+      <AliasProperty>
+        <Name>Length</Name>
+        <ReferencedMemberName>size</ReferencedMemberName>
+      </AliasProperty>
+      <!-- The link times out, so should use odgc.
+      <ScriptMethod>
+        <Name>Save</Name>
+        <Script>
+            Invoke-WebRequest -Uri $this."@content.downloadUrl" -OutFile $args[0] -UseBasicParsing
+        </Script>
+      </ScriptMethod>
+      -->
+      <ScriptMethod>
+        <Name>ToString</Name>
+        <Script>
+            $this.Path
+        </Script>
+      </ScriptMethod>
+      <ScriptProperty>
+        <Name>BaseName</Name>
+        <GetScriptBlock>
+            [System.IO.Path]::GetFileNameWithoutExtension($this.Name)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>CreationTime</Name>
+        <GetScriptBlock>
+            $dt = Get-Date $this.CreatedDateTime
+            "$($dt.ToString("d")) $($dt.ToString("t"))"
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Extension</Name>
+        <GetScriptBlock>
+            [System.IO.Path]::GetExtension($this.Name)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>LastWriteTime</Name>
+        <GetScriptBlock>
+            $dt = Get-Date $this.LastModifiedDateTime
+            "$($dt.ToString("d")) $($dt.ToString("t"))"
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Path</Name>
+        <GetScriptBlock>
+            $this.Parent + '/' + $this.name
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Parent</Name>
+        <GetScriptBlock>
+            [System.Web.HttpUtility]::UrlDecode($this.parentReference.path)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Type</Name>
+        <GetScriptBlock>
+          if ($this.deleted) {
+              "deleted"
+          } elseif ($this.file) {
+              "file"
+          } elseif ($this.folder) {
+              "folder"
+          } elseif ($this.photo) {
+              "photo"
+          } elseif ($this.image) {
+              "image"
+          } elseif ($this.audio) {
+              "audio"
+          } elseif ($this.package) {
+              "package"
+          } elseif ($this.video) {
+              "video"
+          }
+        </GetScriptBlock>
+      </ScriptProperty>
+      <!--
+      <ScriptProperty>
+        <Name>Root</Name>
+        <GetScriptBlock>
+          # TO DO: update when changed to config file roots
+        </GetScriptBlock>
+      </ScriptProperty>
+      -->
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>Id</Name>
+              <Name>Name</Name>
+              <Name>Description</Name>
+              <Name>Length</Name>
+              <Name>Path</Name>
+              <Name>Extension</Name>
+              <Name>CreationTime</Name>
+              <Name>LastWriteTime</Name>
+              <Name>Type</Name>
+              <Name>Shared</Name>
             </ReferencedProperties>
           </PropertySet>
         </Members>

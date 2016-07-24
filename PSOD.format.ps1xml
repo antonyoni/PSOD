@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!------------------------------------------------------------------------------
+- Author     : Antony Onipko
+- Copyright  : (c) 2016 Antony Onipko. All rights reserved.
+------------------------------------------------------------------------------
+- This work is licensed under the Creative Commons
+- Attribution-NonCommercial-ShareAlike 4.0 International License.
+- To view a copy of this license, visit
+- https://creativecommons.org/licenses/by-nc-sa/4.0/
+------------------------------------------------------------------------------->
+
 <Configuration>
 
   <Controls>
@@ -13,9 +23,7 @@
                 <CustomItem>
                   <Text>Path:  </Text>
                   <ExpressionBinding>
-                    <ScriptBlock>
-                        $_.parentReference.path
-                    </ScriptBlock>
+                    <PropertyName>Parent</PropertyName>
                   </ExpressionBinding>
                   <NewLine/>
                 </CustomItem> 
@@ -37,10 +45,7 @@
       </ViewSelectedBy>
 
       <GroupBy>
-        <!--<PropertyName>ParentPath</PropertyName>-->
-        <ScriptBlock>
-          $_.parentReference.path
-        </ScriptBlock>
+        <PropertyName>Parent</PropertyName>
         <CustomControlName>OneDriveItem-GroupFormatting</CustomControlName>
       </GroupBy>
 
@@ -48,7 +53,7 @@
         <TableHeaders>
           <TableColumnHeader>
             <Label>Type</Label>
-            <Width>5</Width>
+            <Width>8</Width>
             <Alignment>left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
@@ -69,27 +74,16 @@
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem>
-                <ScriptBlock>
-                  if ($_.folder) {
-                    "d"
-                  } elseif ($_.package) {
-                    "p"
-                  } else {
-                    "f"
-                  }
-                </ScriptBlock>
+                <PropertyName>Type</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock>
-                  $dt = Get-Date $_.lastModifiedDateTime
-                  "{0,10}  {1,6}" -f $dt.ToString("d"), $dt.ToString("t")
-                </ScriptBlock>
+                <PropertyName>LastWriteTime</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>size</PropertyName>
+                <PropertyName>Length</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>name</PropertyName>
+                <PropertyName>Name</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
@@ -98,4 +92,5 @@
 
     </View>
   </ViewDefinitions>
+
 </Configuration>
