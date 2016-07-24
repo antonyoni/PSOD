@@ -43,12 +43,6 @@ Function Get-OneDriveContent {
         [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
-        # The API path for the user's default drive's root. Default is 'drive/root:/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item Path')]
-        [string]$DriveRootPath = 'drive/root:/',
-
         # API item ID.
         [Parameter(Mandatory=$True,
                    Position=2,
@@ -57,12 +51,6 @@ Function Get-OneDriveContent {
                    ParameterSetName='Item ID')]
         [Alias('id')]
         [string]$ItemId,
-
-        # The API url to access a specified item. Default is 'drive/items/'.
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item ID')]
-        [string]$ItemIdRoot = 'drive/items/',
 
         # The path to the destination directory / file.
         [Parameter(Mandatory=$False,
@@ -79,28 +67,27 @@ Function Get-OneDriveContent {
     Process {
 
         if ($ItemId) {
-            $item = Get-OneDriveItem -Token $Token -ItemId $ItemId -ItemIdRoot $ItemIdRoot
+            $item = Get-OneDriveItem -Token $Token -ItemId $ItemId
         } else {
-            $item = Get-OneDriveItem -Token $Token -Path $Path -DriveRootPath $DriveRootPath
+            $item = Get-OneDriveItem -Token $Token -Path $Path
         }
 
         if ($item.folder) {
             $newDestination = Join-Path $Destination $item.name
             New-Item -ItemType Directory -Path $newDestination | Out-Null
             if ($ItemId) {
-                $children = Get-OneDriveChildItem -Token $Token -ItemId $ItemId -ItemIdRoot $ItemIdRoot
+                $children = Get-OneDriveChildItem -Token $Token -ItemId $ItemId
             } else {
-                $children = Get-OneDriveChildItem -Token $Token -Path $Path -DriveRootPath $DriveRootPath
+                $children = Get-OneDriveChildItem -Token $Token -Path $Path
             }
             $children | % {
                 Get-OneDriveContent -Token $Token `
                                     -ItemId $_.id `
-                                    -ItemIdRoot $ItemIdRoot `
                                     -Destination $newDestination
             }
         } else {
             $outFile = Join-Path $Destination $item.name
-            $dloadPath = joinPath $ItemIdRoot $item.id
+            $dloadPath = joinPath $PSOD.drive.itemRoot $item.id
             $dloadPath = joinPath $dloadPath 'content'
             Invoke-OneDriveApiCall -Token $Token -Path $dloadPath -OutFile $outFile
         }

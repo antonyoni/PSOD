@@ -46,12 +46,6 @@ Function Set-OneDriveContent {
         [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
-        # The API path for the user's default drive's root. Default is 'drive/root:/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item Path')]
-        [string]$DriveRootPath = 'drive/root:/',
-
         # API destination item ID.
         [Parameter(Mandatory=$True,
                    Position=2,
@@ -60,12 +54,6 @@ Function Set-OneDriveContent {
                    ParameterSetName='Item ID')]
         [Alias('id')]
         [string]$ItemId,
-
-        # The API url to access a specified item. Default is 'drive/items/'.
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item ID')]
-        [string]$ItemIdRoot = 'drive/items/',
 
         # The local path of the source file or directory.
         [Parameter(Mandatory=$True,
@@ -88,13 +76,13 @@ Function Set-OneDriveContent {
         Write-Verbose "Source path: $($upload.FullName)"
 
         if ($ItemId) {
-            $remote = Get-OneDriveItem -Token $Token -ItemId $ItemId -ItemIdRoot $ItemIdRoot
+            $remote = Get-OneDriveItem -Token $Token -ItemId $ItemId
             if (!$remote) {
                 return
             }
         } else {
             try {
-                $remote = Get-OneDriveItem -Token $Token -Path $Path -DriveRootPath $DriveRootPath
+                $remote = Get-OneDriveItem -Token $Token -Path $Path
             } catch {
                 # supress errors. OneDrive creates the full path if it doesn't exist.
             }
@@ -102,27 +90,27 @@ Function Set-OneDriveContent {
 
         if (!$remote -and !$Path.EndsWith('/')) {
             # Assume path leaf is the file name even if no extension
-            $uploadPath = joinPath $DriveRootPath $Path
+            $uploadPath = joinPath $PSOD.drive.pathRoot $Path
             $uploadPath = $uploadPath.TrimEnd('/') + ':/content'
         } elseif ($remote.folder -or $Path.EndsWith('/')) {
             if ($ItemId) {
-                $uploadPath = joinPath $ItemIdRoot $ItemId
+                $uploadPath = joinPath $PSOD.drive.itemRoot $ItemId
                 $uploadPath = joinPath $uploadPath 'children'
                 $uploadPath = joinPath $uploadPath $upload.Name
                 $uploadPath = joinPath $uploadPath 'content'
             } else {
-                $uploadPath = joinPath $DriveRootPath $Path
+                $uploadPath = joinPath $PSOD.drive.pathRoot $Path
                 $uploadPath = joinPath $uploadPath $upload.Name
                 $uploadPath += ':/content'
             }
         } else {
             if ($ItemId) {
-                $uploadPath = joinPath $ItemIdRoot $remote.parentReference.id
+                $uploadPath = joinPath $PSOD.drive.itemRoot $remote.parentReference.id
                 $uploadPath += ':'
                 $uploadPath = joinPath $uploadPath $remote.name 
                 $uploadPath += ':/content'
             } else {
-                $uploadPath = joinPath $DriveRootPath $Path
+                $uploadPath = joinPath $PSOD.drive.pathRoot $Path
                 $uploadPath = $uploadPath.TrimEnd('/') + ':/content'
             }
         }

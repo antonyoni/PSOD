@@ -43,12 +43,6 @@ Function Move-OneDriveItem {
         [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
-        # The API path for the user's default drive's root. Default is 'drive/root:/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item Path')]
-        [string]$DriveRootPath = 'drive/root:/',
-
         # API item ID.
         [Parameter(Mandatory=$True,
                    Position=2,
@@ -57,12 +51,6 @@ Function Move-OneDriveItem {
                    ParameterSetName='Item ID')]
         [Alias('id')]
         [string]$ItemId,
-
-        # The API url to access a specified item. Default is 'drive/items/'.
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item ID')]
-        [string]$ItemIdRoot = 'drive/items/',
 
         # The path to the destination directory / file.
         [Parameter(Mandatory=$True,
@@ -73,16 +61,16 @@ Function Move-OneDriveItem {
     Process {
 
         if ($ItemId) {
-            $p = joinPath $ItemIdRoot $ItemId
+            $p = joinPath $PSOD.drive.itemRoot $ItemId
         } else {
-            $p = joinPath $DriveRootPath $Path
+            $p = joinPath $PSOD.drive.pathRoot $Path
         }
 
         Write-Verbose "Sending request to '$p'"
 
         $body = [ordered]@{
             parentReference = @{
-                path = "/" + (joinPath $DriveRootPath $Destination)
+                path = "/" + (joinPath $PSOD.drive.pathRoot $Destination)
             }
         } | ConvertTo-Json
 

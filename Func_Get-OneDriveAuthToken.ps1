@@ -11,43 +11,25 @@
 Function Get-OneDriveAuthToken {
     <#
         .SYNOPSIS
-        Gets an authorization token for an application. By default, the onedrive.readwrite permissions are requested.
+        Gets an authorization token for the application defined in the PSOD.config.json or onedrive.opt file. By default, the onedrive.readwrite permissions are requested.
         
         .EXAMPLE
-        Get-OneDriveAuthToken '0000abcd-0000-abcd-00ab-abcd0000dcba'
+        Get-OneDriveAuthToken
 
         .EXAMPLE
-        '0000abcd-0000-abcd-00ab-abcd0000dcba' | Get-OneDriveAuthToken
-
-        .EXAMPLE
-        Get-OneDriveAuthToken -ApplicationId '0000abcd-0000-abcd-00ab-abcd0000dcba' -AuthenticationScopes 'onedrive.readwrite', 'offline_access'
-        
+        Get-OneDriveAuthToken -AuthenticationScopes 'onedrive.readwrite', 'offline_access'
     #>
     [CmdletBinding()]
     [OutputType("PSOD.OneDriveToken")]
     Param
     (
-        # The ID of the application to get authorization for. The default is the ID of the 'OLExpenses' application.
-        [Parameter(Mandatory=$True,
-                   Position=1,
-                   ValueFromPipeline=$True)]
-        [string]$ApplicationId,
-
         # The scope(s) to request authentication for. Default is 'onedrive.readwrite'.
         [Parameter(Mandatory=$False)]
         [string[]]$AuthenticationScopes = @('onedrive.readwrite'),
 
-        # The callback URL for the authentication website. By default this is 'https://login.live.com/oauth20_desktop.srf', the recommended callback for desktop apps.
-        [Parameter(Mandatory=$False)]
-        [string]$CallBackUrl = 'https://login.live.com/oauth20_desktop.srf',
-
         # The response type to request from the authentication server. Either token or code. Default is token.
         [Parameter(Mandatory=$False)]
-        [string]$ResponseType = 'token',
-
-        # The authorization URL for the API.
-        [Parameter(Mandatory=$False)]
-        [string]$SignInUrl = 'https://login.live.com/oauth20_authorize.srf'
+        [string]$ResponseType = 'token'
     )
 
     Begin {
@@ -59,11 +41,11 @@ Function Get-OneDriveAuthToken {
 
     End {
 
-        $requestUri  = $SignInUrl
-        $requestUri += "?client_id=$ApplicationId"
+        $requestUri  = $PSOD.auth.signInUrl
+        $requestUri += "?client_id=$($PSOD.auth.applicationId)"
         $requestUri += "&scope=$($AuthenticationScopes -join ' ')"
         $requestUri += "&response_type=$ResponseType"
-        $requestUri += "&redirect_url=$CallBackUrl"
+        $requestUri += "&redirect_url=$($PSOD.auth.callbackUrl)"
 
         Write-Verbose "$requestUri"
 

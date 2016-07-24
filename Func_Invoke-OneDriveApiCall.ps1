@@ -42,11 +42,6 @@ Function Invoke-OneDriveApiCall {
         [Alias("ApiToken", "AccessToken")]
         [PsObject]$Token,
 
-        # Api URL. Default is the OneDrive personal address of 'https://api.onedrive.com/v1.0/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True)]
-        [string]$ApiUrlRoot = 'https://api.onedrive.com/v1.0/',
-
         # The method used for the API request.
         [Parameter(Mandatory=$False,
                    ValueFromPipelineByPropertyName=$True)]
@@ -75,7 +70,9 @@ Function Invoke-OneDriveApiCall {
 
     Process {
         
-        $requestUri = joinPath $ApiUrlRoot $Path
+        Write-Verbose $PSOD
+        
+        $requestUri = joinPath $PSOD.api.url $Path
 
         Write-Verbose "Request URI:`n$requestUri"
 

@@ -43,12 +43,6 @@ Function Get-OneDriveChildItem {
         [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
-        # The API path for the user's default drive's root. Default is 'drive/root:/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item Path')]
-        [string]$DriveRootPath = 'drive/root:/',
-
         # API item ID.
         [Parameter(Mandatory=$True,
                    Position=2,
@@ -57,12 +51,6 @@ Function Get-OneDriveChildItem {
                    ParameterSetName='Item ID')]
         [Alias('id')]
         [string]$ItemId,
-
-        # The API url to access a specified item. Default is 'drive/items/'.
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item ID')]
-        [string]$ItemIdRoot = 'drive/items/',
 
         # Gets the items in the specified path, and all child items.
         [Parameter(Mandatory=$False)]
@@ -73,13 +61,11 @@ Function Get-OneDriveChildItem {
 
         if ($ItemId) {
             $rsp = Get-OneDriveItem -Token $Token `
-                                    -ItemId ($ItemId + ':/:/children') `
-                                    -ItemIdRoot $ItemIdRoot
+                                    -ItemId ($ItemId + ':/:/children')
 
         } else {
             $rsp = Get-OneDriveItem -Token $Token `
-                                    -Path ($Path + ':/children') `
-                                    -DriveRootPath $DriveRootPath
+                                    -Path ($Path + ':/children')
         }
 
         Write-Output $rsp | newOneDriveItem
@@ -88,7 +74,6 @@ Function Get-OneDriveChildItem {
             $rsp | ? { [int]$_.folder.childCount -gt 0 } | % {
                 Get-OneDriveChildItem -Token $Token `
                                       -ItemId $_.id `
-                                      -ItemIdRoot $ItemIdRoot `
                                       -Recurse
             }
         }

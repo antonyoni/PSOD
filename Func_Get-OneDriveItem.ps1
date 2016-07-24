@@ -43,12 +43,6 @@ Function Get-OneDriveItem {
         [Alias('ApiUrl', 'Resource')]
         [string]$Path,
 
-        # The API path for the user's default drive's root. Default is 'drive/root:/'. 
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item Path')]
-        [string]$DriveRootPath = 'drive/root:/',
-
         # API item ID.
         [Parameter(Mandatory=$True,
                    Position=2,
@@ -56,21 +50,15 @@ Function Get-OneDriveItem {
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item ID')]
         [Alias('id')]
-        [string]$ItemId,
-
-        # The API url to access a specified item. Default is 'drive/items/'.
-        [Parameter(Mandatory=$False,
-                   ValueFromPipelineByPropertyName=$True,
-                   ParameterSetName='Item ID')]
-        [string]$ItemIdRoot = 'drive/items/'
+        [string]$ItemId
     )
 
     Process {
 
         if ($ItemId) {
-            $p = joinPath $ItemIdRoot $ItemId
+            $p = joinPath $PSOD.drive.itemRoot $ItemId
         } else {
-            $p = joinPath $DriveRootPath $Path
+            $p = joinPath $PSOD.drive.pathRoot $Path
         }
 
         # API only returns directories if there's a trailing '/'. This does not
