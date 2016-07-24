@@ -99,15 +99,21 @@
         </GetScriptBlock>
       </ScriptProperty>
       <ScriptProperty>
-        <Name>Path</Name>
-        <GetScriptBlock>
-            $this.Parent + '/' + $this.name
-        </GetScriptBlock>
-      </ScriptProperty>
-      <ScriptProperty>
         <Name>Parent</Name>
         <GetScriptBlock>
             [System.Web.HttpUtility]::UrlDecode($this.parentReference.path)
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>ParentId</Name>
+        <GetScriptBlock>
+            $this.parentReference.id
+        </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>Path</Name>
+        <GetScriptBlock>
+            $this.Parent + '/' + $this.name
         </GetScriptBlock>
       </ScriptProperty>
       <ScriptProperty>
