@@ -109,12 +109,14 @@ Function Invoke-OneDriveApiCall {
 
         try {
             $rsp = Invoke-RestMethod @irmParams
-        } catch {
-            $errorMessage = $err.ErrorDetails.Message | ConvertFrom-Json
+        } catch [System.Net.WebException] {
+            $errorMessage = $_.ErrorDetails.Message | ConvertFrom-Json
             Write-Error "'$Path' - $($errorMessage.error.message). (Error code: $($errorMessage.error.code))"
-            $httpResponse = $err.Exception.Response
+            $httpResponse = $_.Exception.Response
             Write-Verbose "HTTP status code        : $($httpResponse.StatusCode.value__)"
             Write-Verbose "HTTP status description : $($httpResponse.StatusDescription)"
+        } catch {
+            Write-Error $_.Exception.Message
         }
 
         Write-Output $rsp
@@ -124,12 +126,15 @@ Function Invoke-OneDriveApiCall {
 
 Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
 
-#. .\setup-test.ps1
-#$path = 'drive'
-#Invoke-OneDriveApiCall -Path $path -Token $token -Verbose
-#'drive', 'drive' | Invoke-OneDriveApiCall -Token $token
-#Get-Content .\onedrive.opt | Get-OneDriveAuthToken | Invoke-OneDriveApiCall -Resource drive
-#$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
+<#
+. .\setup-test.ps1
+Invoke-OneDriveApiCall -Path 'drive' -Token $token -Verbose
+'drive', 'drive' | Invoke-OneDriveApiCall -Token $token
+$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
+$token | Invoke-OneDriveApiCall -Path 'http-error' -Verbose
+$PSOD.api.url = ''
+$token | Invoke-OneDriveApiCall -Path 'error' -Verbose
+#>
 <#
 [pscustomobject]@{
     Path  = 'drive/shared'
