@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # Author     : Antony Onipko
 # Copyright  : (c) 2016 Antony Onipko. All rights reserved.
 ################################################################################
@@ -81,15 +81,7 @@ Function Get-OneDriveItem {
 
         $rsp = Invoke-OneDriveApiCall -Token $Token -Path $p
 
-        Write-Verbose "Received response with $($rsp.value.Count) item(s)."
-
-        if ($rsp.value) {
-            $ret = $rsp.value
-        } else {
-            $ret = $rsp
-        }
-
-        Write-Output $ret
+        Write-Output $rsp | newOneDriveItem
     }
 
 }
@@ -99,7 +91,7 @@ Export-ModuleMember -Function 'Get-OneDriveItem' -Alias 'odgi'
 #. .\setup-test.ps1
 <#
 Get-OneDriveItem $token -Verbose | select name, id, size, webUrl | Format-Table
-"Documents" | Get-OneDriveItem $token -Verbose
+"Documents/" | Get-OneDriveItem $token -Verbose
 #>
 <#
 $token | Get-OneDriveItem -ItemId '85B75A4CE0397EE!110' -Verbose

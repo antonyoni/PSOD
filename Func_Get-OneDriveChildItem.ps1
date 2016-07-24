@@ -72,20 +72,20 @@ Function Get-OneDriveChildItem {
     Process {
 
         if ($ItemId) {
-            $ret = Get-OneDriveItem -Token $Token `
+            $rsp = Get-OneDriveItem -Token $Token `
                                     -ItemId ($ItemId + ':/:/children') `
                                     -ItemIdRoot $ItemIdRoot
 
         } else {
-            $ret = Get-OneDriveItem -Token $Token `
+            $rsp = Get-OneDriveItem -Token $Token `
                                     -Path ($Path + ':/children') `
                                     -DriveRootPath $DriveRootPath
         }
 
-        Write-Output $ret
+        Write-Output $rsp | newOneDriveItem
 
         if ($Recurse) {
-            $ret | ? { [int]$_.folder.childCount -gt 0 } | % {
+            $rsp | ? { [int]$_.folder.childCount -gt 0 } | % {
                 Get-OneDriveChildItem -Token $Token `
                                       -ItemId $_.id `
                                       -ItemIdRoot $ItemIdRoot `

@@ -94,7 +94,7 @@ Function Move-OneDriveItem {
                                       -Body $body `
                                       -AdditionalRequestHeaders @{ Prefer = "respond-async" }
 
-        Write-Output $rsp
+        Write-Output $rsp | newOneDriveItem
     }
 
 }

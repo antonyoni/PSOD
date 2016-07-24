@@ -135,11 +135,13 @@ Function Set-OneDriveContent {
             $uploadPath += '?@name.conflictBehavior=fail'
         }
         
-        Invoke-OneDriveApiCall -Token $Token `
-                               -Path $uploadPath `
-                               -Method PUT `
-                               -InFile $upload.FullName
+        $rsp = Invoke-OneDriveApiCall -Token $Token `
+                                      -Path $uploadPath `
+                                      -Method PUT `
+                                      -InFile $upload.FullName
 
+        Write-Output $rsp | newOneDriveItem
+        
     }
 
 }
