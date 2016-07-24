@@ -110,7 +110,15 @@ Function Invoke-OneDriveApiCall {
             $irmParams['OutFile'] = $OutFile
         }
 
-        $rsp = Invoke-RestMethod @irmParams
+        try {
+            $rsp = Invoke-RestMethod @irmParams
+        } catch {
+            $errorMessage = $err.ErrorDetails.Message | ConvertFrom-Json
+            Write-Error "'$Path' - $($errorMessage.error.message). (Error code: $($errorMessage.error.code))"
+            $httpResponse = $err.Exception.Response
+            Write-Verbose "HTTP status code        : $($httpResponse.StatusCode.value__)"
+            Write-Verbose "HTTP status description : $($httpResponse.StatusDescription)"
+        }
 
         Write-Output $rsp
     }
