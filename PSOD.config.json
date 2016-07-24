@@ -4,7 +4,7 @@
     },
     "auth": {
         "applicationId": "",
-        "signInUrl": "https://api.onedrive.com/v1.0/",
+        "signInUrl": "https://login.live.com/oauth20_authorize.srf",
         "callbackUrl": "https://login.live.com/oauth20_desktop.srf"
     },
     "drive": {
