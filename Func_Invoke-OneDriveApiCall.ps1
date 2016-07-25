@@ -14,13 +14,10 @@ Function Invoke-OneDriveApiCall {
         Wrapper for Invoke-RestMethod to send commands to the OneDrive API.
         
         .EXAMPLE
-        Invoke-OneDriveApiCall -Path $path -Token $token.Token
+        Invoke-OneDriveApiCall -Path $path
 
         .EXAMPLE
-        'drive', 'drives' | Invoke-OneDriveApiCall -Token $token.Token
-
-        .EXAMPLE
-        $token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
+        'drive/root:/Documents:/children' | Invoke-OneDriveApiCall
     #>
     [CmdletBinding()]
     [OutputType([PsObject])]
@@ -33,14 +30,6 @@ Function Invoke-OneDriveApiCall {
                    ValueFromPipelineByPropertyName=$True)]
         [Alias("ApiUrl", "Resource")]
         [string]$Path,
-
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipeline=$True,
-                   ValueFromPipelineByPropertyName=$True)]
-        [Alias("ApiToken", "AccessToken")]
-        [PsObject]$Token,
 
         # The method used for the API request.
         [Parameter(Mandatory=$False,
@@ -68,16 +57,21 @@ Function Invoke-OneDriveApiCall {
         [hashtable]$AdditionalRequestHeaders
     )
 
+    Begin {
+        if (!(Test-OneDriveAuthToken)) {
+            Write-Error "Unable to authenticate with OneDrive. Please check the configuration file."
+            break
+        }
+    }
+
     Process {
-        
-        Write-Verbose $PSOD
         
         $requestUri = joinPath $PSOD.api.url $Path
 
         Write-Verbose "Request URI:`n$requestUri"
 
         $requestHeaders = @{
-            Authorization = "bearer $Token"
+            Authorization = "bearer $($PSOD.token)"
             Accept        = 'application/json'
         }
 
@@ -126,28 +120,28 @@ Function Invoke-OneDriveApiCall {
 
 Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
 
+#. .\setup-test.ps1
 <#
-. .\setup-test.ps1
-Invoke-OneDriveApiCall -Path 'drive' -Token $token -Verbose
-'drive', 'drive' | Invoke-OneDriveApiCall -Token $token
-$token | Invoke-OneDriveApiCall -Path 'drive/view.recent'
-$token | Invoke-OneDriveApiCall -Path 'http-error' -Verbose
+Invoke-OneDriveApiCall -Path 'drive' -Verbose
+'drive', 'drive' | Invoke-OneDriveApiCall
+Invoke-OneDriveApiCall -Path 'drive/view.recent'
+Invoke-OneDriveApiCall -Path 'http-error' -Verbose
 $PSOD.api.url = ''
-$token | Invoke-OneDriveApiCall -Path 'error' -Verbose
+Invoke-OneDriveApiCall -Path 'error' -Verbose
 #>
 <#
 [pscustomobject]@{
     Path  = 'drive/shared'
-    Token = $token
 } | Invoke-OneDriveApiCall
+Invoke-OneDriveApiCall -Path 'drive/root:/Documents:/children' `
+                       -Method Post `
+                       -Body ([ordered]@{
+                           name   = 'TestFolder'
+                           folder = @{}
+                       } | ConvertTo-Json) `
+                       -Verbose
 #>
 <#
-Invoke-OneDriveApiCall -Path 'drive/root:/Documents:/children'`
-                   -Token $token `
-                   -Method Post `
-                   -Body ([ordered]@{
-                       name   = 'TestFolder'
-                       folder = @{}
-                   } | ConvertTo-Json) `
-                   -Verbose
+$PSOD.auth.applicationId = "abc123"
+Invoke-OneDriveApiCall -Path 'drive' -Verbose
 #>
