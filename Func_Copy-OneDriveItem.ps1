@@ -14,29 +14,22 @@ Function Copy-OneDriveItem {
         Copies a one drive item from one path to another.
         
         .EXAMPLE
-        "Documents/file.pdf" | Copy-OneDriveItem $token "destination/directory"
+        "Documents/file.pdf" | Copy-OneDriveItem "destination/directory"
 
         .EXAMPLE
-        Copy-OneDriveItem $token -ItemID "85B75A4CE0397EE!1492" -destination "destination/directory"
+        Copy-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "destination/directory"
 
         .EXAMPLE
-        Copy-OneDriveItem $token "Documents/DirToCopy" "destination/directory"
+        Copy-OneDriveItem "Documents/DirToCopy" "destination/directory"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
     [Alias('odcp', 'odcopy')]
     [OutputType([PsObject])]
     Param
     (
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   ValueFromPipeline=$True,
-                   Position=1)]
-        [Alias('ApiToken', 'AccessToken')]
-        [PsObject]$Token,
-
         # API resource path.
         [Parameter(Mandatory=$False,
-                   Position=2,
+                   Position=1,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
@@ -45,8 +38,7 @@ Function Copy-OneDriveItem {
 
         # API item ID.
         [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipeline=$True,
+                   Position=1,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item ID')]
         [Alias('id')]
@@ -54,7 +46,7 @@ Function Copy-OneDriveItem {
 
         # The path to the destination directory / file.
         [Parameter(Mandatory=$True,
-                   Position=3)]
+                   Position=2)]
         [string]$Destination
     )
 
@@ -78,8 +70,7 @@ Function Copy-OneDriveItem {
 
         Write-Verbose "Request body:`n$body"
 
-        $rsp = Invoke-OneDriveApiCall -Token $Token `
-                                      -Path $p `
+        $rsp = Invoke-OneDriveApiCall -Path $p `
                                       -Method POST `
                                       -Body $body `
                                       -AdditionalRequestHeaders @{ Prefer = "respond-async" }
@@ -93,8 +84,8 @@ Export-ModuleMember -Function 'Copy-OneDriveItem' -Alias 'odcp', 'odcopy'
 
 #. .\setup-test.ps1
 <#
-Copy-OneDriveItem $token "temp/test3.pdf" "temp/dest" -Verbose
-"temp/Document1.docx" | Copy-OneDriveItem $token -destination "dontexist" -Verbose
-Copy-OneDriveItem $token -ItemID "85B75A4CE0397EE!1492" -destination "temp/dest" -Verbose
-Copy-OneDriveItem $token "temp/copy" "temp/dest" -Verbose
+Copy-OneDriveItem "temp/test3.pdf" "temp/dest" -Verbose
+"temp/Document1.docx" | Copy-OneDriveItem -destination "dontexist" -Verbose
+Copy-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "temp/dest" -Verbose
+Copy-OneDriveItem "temp/copy" "temp/dest" -Verbose
 #>

@@ -14,29 +14,22 @@ Function Remove-OneDriveItem {
         Deletes the specified item.
         
         .EXAMPLE
-        Remove-OneDriveItem $token "Documents/doc-to-remove.pdf"
+        Remove-OneDriveItem "Documents/doc-to-remove.pdf"
 
         .EXAMPLE
-        "Documents/Office Lens/0000001.docx" | Remove-OneDriveItem $token
+        "Documents/Office Lens/0000001.docx" | Remove-OneDriveItem
 
         .EXAMPLE
-        Remove-OneDriveItem $token -ItemId "1234ABC!123"
+        Remove-OneDriveItem -ItemId "1234ABC!123"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
     [Alias('odrm', 'oddel')]
     [OutputType([boolean])]
     Param
     (
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   ValueFromPipeline=$True,
-                   Position=1)]
-        [Alias('ApiToken', 'AccessToken')]
-        [PsObject]$Token,
-
         # API resource path.
         [Parameter(Mandatory=$False,
-                   Position=2,
+                   Position=1,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
@@ -45,8 +38,7 @@ Function Remove-OneDriveItem {
 
         # API item ID.
         [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipeline=$True,
+                   Position=1,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item ID')]
         [Alias('id')]
@@ -63,10 +55,9 @@ Function Remove-OneDriveItem {
 
         Write-Verbose "Sending request to '$p'"
 
-        $rsp = Invoke-OneDriveApiCall -Token $Token -Path $p -Method DELETE
+        $rsp = Invoke-OneDriveApiCall -Path $p -Method DELETE
 
-        if ($rsp -is [string]) {
-            Write-Output $True
+        if ($rsp -is [string]) {utput $True
         } else {
             Write-Output $False
         }
@@ -79,10 +70,10 @@ Export-ModuleMember -Function 'Remove-OneDriveItem' -Alias 'odrm', 'oddel'
 
 #. .\setup-test.ps1
 <#
-Remove-OneDriveItem $token "temp/another1"
-Remove-OneDriveItem $token "temp/another2"
-"temp/temp.pdf" | Remove-OneDriveItem $token
-"temp/temp.pdf" | Remove-OneDriveItem $token #fails
-Remove-OneDriveItem $token -ItemId "85B75A4CE0397EE!1482"
-Remove-OneDriveItem $token -id "85B75A4CE0397EE!1489"
+Remove-OneDriveItem "temp/another1"
+Remove-OneDriveItem "temp/another2"
+"temp/temp.pdf" | Remove-OneDriveItem
+"temp/temp.pdf" | Remove-OneDriveItem #fails
+Remove-OneDriveItem -ItemId "85B75A4CE0397EE!1482"
+Remove-OneDriveItem -id "85B75A4CE0397EE!1489"
 #>

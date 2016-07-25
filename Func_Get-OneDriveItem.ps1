@@ -14,29 +14,22 @@ Function Get-OneDriveItem {
         Gets item (folder/file) details from the OneDrive API. By default gets the default drive's root. Can be used with either a relative path, or an item id.
         
         .EXAMPLE
-        Get-OneDriveItem $token # return the root
+        Get-OneDriveItem # return the root
 
         .EXAMPLE
-        "Documents" | Get-OneDriveItem $token
+        "Documents" | Get-OneDriveItem
 
         .EXAMPLE
-        Get-OneDriveItem $token -ItemId "1234ABC!123"
+        Get-OneDriveItem -ItemId "1234ABC!123"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
     [Alias('odgi')]
     [OutputType([PsObject])]
     Param
     (
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   ValueFromPipeline=$True,
-                   Position=1)]
-        [Alias('ApiToken', 'AccessToken')]
-        [PsObject]$Token,
-
         # API resource path.
         [Parameter(Mandatory=$False,
-                   Position=2,
+                   Position=1,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
@@ -45,8 +38,7 @@ Function Get-OneDriveItem {
 
         # API item ID.
         [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipeline=$True,
+                   Position=1,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item ID')]
         [Alias('id')]
@@ -67,7 +59,7 @@ Function Get-OneDriveItem {
 
         Write-Verbose "Sending request to '$p'"
 
-        $rsp = Invoke-OneDriveApiCall -Token $Token -Path $p
+        $rsp = Invoke-OneDriveApiCall -Path $p
 
         Write-Output $rsp | newOneDriveItem
     }
@@ -78,10 +70,10 @@ Export-ModuleMember -Function 'Get-OneDriveItem' -Alias 'odgi'
 
 #. .\setup-test.ps1
 <#
-Get-OneDriveItem $token -Verbose | select name, id, size, webUrl | Format-Table
-"Documents/" | Get-OneDriveItem $token -Verbose
+Get-OneDriveItem -Verbose
+"Documents/" | Get-OneDriveItem -Verbose
 #>
 <#
-$token | Get-OneDriveItem -ItemId '85B75A4CE0397EE!110' -Verbose
-Get-OneDriveItem $token -ItemId '85B75A4CE0397EE!1436' -Verbose
+Get-OneDriveItem -ItemId '85B75A4CE0397EE!110' -Verbose
+[pscustomobject]@{ id = '85B75A4CE0397EE!1436' } | Get-OneDriveItem -Verbose
 #>

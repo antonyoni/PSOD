@@ -14,29 +14,22 @@ Function Move-OneDriveItem {
         Move a OneDrive item from one parent to another.
         
         .EXAMPLE
-        "Documents/file.pdf" | Move-OneDriveItem $token "destination/directory"
+        "Documents/file.pdf" | Move-OneDriveItem "destination/directory"
 
         .EXAMPLE
-        Move-OneDriveItem $token -ItemID "85B75A4CE0397EE!1492" -destination "destination/directory"
+        Move-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "destination/directory"
 
         .EXAMPLE
-        Move-OneDriveItem $token "Documents/DirToMove" "new/parent"
+        Move-OneDriveItem "Documents/DirToMove" "new/parent"
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
     [Alias('odmv', 'odmove')]
     [OutputType([PsObject])]
     Param
     (
-        # The API authentication token.
-        [Parameter(Mandatory=$True,
-                   ValueFromPipeline=$True,
-                   Position=1)]
-        [Alias('ApiToken', 'AccessToken')]
-        [PsObject]$Token,
-
         # API resource path.
         [Parameter(Mandatory=$False,
-                   Position=2,
+                   Position=1,
                    ValueFromPipeline=$True,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item Path')]
@@ -45,8 +38,7 @@ Function Move-OneDriveItem {
 
         # API item ID.
         [Parameter(Mandatory=$True,
-                   Position=2,
-                   ValueFromPipeline=$True,
+                   Position=1,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Item ID')]
         [Alias('id')]
@@ -54,7 +46,7 @@ Function Move-OneDriveItem {
 
         # The path to the destination directory / file.
         [Parameter(Mandatory=$True,
-                   Position=3)]
+                   Position=2)]
         [string]$Destination
     )
 
@@ -76,8 +68,7 @@ Function Move-OneDriveItem {
 
         Write-Verbose "Request body:`n$body"
 
-        $rsp = Invoke-OneDriveApiCall -Token $Token `
-                                      -Path $p `
+        $rsp = Invoke-OneDriveApiCall -Path $p `
                                       -Method PATCH `
                                       -Body $body `
                                       -AdditionalRequestHeaders @{ Prefer = "respond-async" }
@@ -91,9 +82,9 @@ Export-ModuleMember -Function 'Move-OneDriveItem' -Alias 'odmv', 'odmove'
 
 #. .\setup-test.ps1
 <#
-Move-OneDriveItem $token "temp/test3.pdf" "temp/move" -Verbose
-"temp/Document1.docx" | Move-OneDriveItem $token -destination "temp/move" -Verbose
-Move-OneDriveItem $token "doesntexist" "temp/move" -Verbose
-Move-OneDriveItem $token -ItemID "85B75A4CE0397EE!1492" -destination "temp" -Verbose
-Move-OneDriveItem $token "temp/move" "temp/move-dir" -Verbose
+Move-OneDriveItem "temp/test3.pdf" "temp/move" -Verbose
+"temp/Document1.docx" | Move-OneDriveItem -destination "temp/move" -Verbose
+Move-OneDriveItem "doesntexist" "temp/move" -Verbose
+Move-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "temp" -Verbose
+Move-OneDriveItem "temp/move" "temp/move-dir" -Verbose
 #>
