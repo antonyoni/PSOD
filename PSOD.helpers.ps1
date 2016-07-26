@@ -44,13 +44,7 @@ Function newOneDriveItem {
 
     Process {
 
-        if ($ApiResponse.value) {
-            $ret = $ApiResponse.value
-        } else {
-            $ret = $ApiResponse
-        }
-
-        $ret | % {
+        $ApiResponse.value | % {
             $_.PsObject.TypeNames.Insert(0, "PSOD.OneDriveItem")
             Write-Output $_
         }
