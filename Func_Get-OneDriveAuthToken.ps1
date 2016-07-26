@@ -79,7 +79,9 @@ Function Get-OneDriveAuthToken {
         $form.Activate()
 
         if (${Global:$tempVar} -match 'error=') {
-            Write-Error (${Global:$tempVar} -split '#')[1]
+            $errId  = [regex]::Match(${Global:$tempVar}, "error=(.+?)&").Groups[1].Value
+            $errMsg = [regex]::Match(${Global:$tempVar}, "error_description=(.+?)(&|$)").Groups[1].Value
+            Write-Error "$errMsg ($errId)"
         } else {
             $token = New-OneDriveToken -ResponseUrl ${Global:$tempVar}
         }
@@ -98,4 +100,6 @@ Export-ModuleMember -Function 'Get-OneDriveAuthToken'
 $token = Get-OneDriveAuthToken -Verbose
 $token | Get-Member
 $token
+$PSOD.auth.applicationId = 'ABC123'
+Get-OneDriveAuthToken -Verbose
 #>
