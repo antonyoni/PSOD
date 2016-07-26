@@ -36,10 +36,10 @@ Author = 'Antony Onipko'
 Copyright = '(c) 2016 Antony Onipko. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Powershell wrapper for the OneDrive REST API.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = ''
+PowerShellVersion = '4.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -93,7 +93,6 @@ FunctionsToExport = @(
     'New-OneDriveToken'
     'Remove-OneDriveItem'
     'Set-OneDriveContent'
-    'Test-OneDriveAuthToken'
 )
 
 # Cmdlets to export from this module
