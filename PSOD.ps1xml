@@ -138,14 +138,12 @@
           }
         </GetScriptBlock>
       </ScriptProperty>
-      <!--
       <ScriptProperty>
         <Name>Root</Name>
         <GetScriptBlock>
-          # TO DO: update when changed to config file roots
+          $PSOD.drive.pathRoot
         </GetScriptBlock>
       </ScriptProperty>
-      -->
       <MemberSet>
         <Name>PSStandardMembers</Name>
         <Members>
