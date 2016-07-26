@@ -53,15 +53,13 @@ Function Get-OneDriveItem {
             $p = joinPath $PSOD.drive.pathRoot $Path
         }
 
-        # API only returns directories if there's a trailing '/'. This does not
-        # seem to matter for files.
-        $p = joinPath $p '/'
-
         Write-Verbose "Sending request to '$p'"
 
         $rsp = Invoke-OneDriveApiCall -Path $p
 
-        Write-Output $rsp | newOneDriveItem
+        if ($rsp) {
+            Write-Output $rsp | newOneDriveItem
+        }
     }
 
 }
