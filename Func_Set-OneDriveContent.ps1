@@ -83,8 +83,8 @@ Function Set-OneDriveContent {
         if (!$remote -and !$Path.EndsWith('/')) {
             # Assume path leaf is the file name even if no extension
             $uploadPath = joinPath $PSOD.drive.pathRoot $Path
-            $uploadPath = $uploadPath.TrimEnd('/') + ':/content'
-        } elseif ($remote.folder -or $Path.EndsWith('/')) {
+            $uploadPath = joinPath $uploadPath 'content' ':/'
+        } elseif ($remote.Type -eq 'folder' -or $Path.EndsWith('/')) {
             if ($ItemId) {
                 $uploadPath = joinPath $PSOD.drive.itemRoot $ItemId
                 $uploadPath = joinPath $uploadPath 'children'
@@ -93,17 +93,16 @@ Function Set-OneDriveContent {
             } else {
                 $uploadPath = joinPath $PSOD.drive.pathRoot $Path
                 $uploadPath = joinPath $uploadPath $upload.Name
-                $uploadPath += ':/content'
+                $uploadPath = joinPath $uploadPath 'content' ':/'
             }
         } else {
             if ($ItemId) {
-                $uploadPath = joinPath $PSOD.drive.itemRoot $remote.parentReference.id
-                $uploadPath += ':'
-                $uploadPath = joinPath $uploadPath $remote.name 
-                $uploadPath += ':/content'
+                $uploadPath = joinPath $PSOD.drive.itemRoot $remote.ParentId
+                $uploadPath = joinPath $uploadPath $remote.Name ':/' 
+                $uploadPath = joinPath $uploadPath 'content' ':/'
             } else {
                 $uploadPath = joinPath $PSOD.drive.pathRoot $Path
-                $uploadPath = $uploadPath.TrimEnd('/') + ':/content'
+                $uploadPath = joinPath $uploadPath 'content' ':/'
             }
         }
 
@@ -119,7 +118,9 @@ Function Set-OneDriveContent {
                                       -Method PUT `
                                       -InFile $upload.FullName
 
-        Write-Output $rsp | newOneDriveItem
+        if ($rsp) {
+            Write-Output $rsp | newOneDriveItem
+        }
         
     }
 

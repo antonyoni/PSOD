@@ -57,7 +57,7 @@ Function Copy-OneDriveItem {
             $p = joinPath $p 'action.copy'
         } else {
             $p = joinPath $PSOD.drive.pathRoot $Path
-            $p = $p.TrimEnd('/') + ':/action.copy'
+            $p = joinPath $p 'action.copy' ':/'
         }
 
         Write-Verbose "Sending request to '$p'"
@@ -73,7 +73,9 @@ Function Copy-OneDriveItem {
         $rsp = Invoke-OneDriveApiCall -Path $p `
                                       -Method POST `
                                       -Body $body `
-                                      -AdditionalRequestHeaders @{ Prefer = "respond-async" }
+                                      -AdditionalRequestHeaders @{
+                                          Prefer = "respond-async"
+                                      }
 
         Write-Output $rsp
     }

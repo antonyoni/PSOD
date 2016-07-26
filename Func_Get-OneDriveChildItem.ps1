@@ -52,20 +52,19 @@ Function Get-OneDriveChildItem {
     Process {
 
         if ($ItemId) {
-            $rsp = Get-OneDriveItem -ItemId ($ItemId + ':/:/children')
-
+            $rsp = Get-OneDriveItem -ItemId (joinPath $ItemId 'children')
         } else {
-            $rsp = Get-OneDriveItem -Path ($Path + ':/children')
+            $rsp = Get-OneDriveItem -Path (joinPath $Path 'children' ':/')
         }
 
-        Write-Output $rsp | newOneDriveItem
+        Write-Output $rsp
 
         if ($Recurse) {
             $rsp | ? { [int]$_.folder.childCount -gt 0 } | % {
                 Get-OneDriveChildItem -ItemId $_.id -Recurse
             }
         }
-
+        
     }
 
 }
@@ -81,8 +80,10 @@ Get-OneDriveChildItem -Path "Documents/Office Lens" -Verbose
 <#
 Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!110' -Verbose
 Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!1436' -Verbose
+#error:
+Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!999' -Verbose
 #>
-#<#
-#Get-OneDriveChildItem -Recurse
-#Get-OneDriveChildItem -Path "Documents/Office Lens" -Verbose -Recurse
+<#
+Get-OneDriveChildItem -Recurse
+Get-OneDriveChildItem -Path "Documents" -Verbose -Recurse
 #>

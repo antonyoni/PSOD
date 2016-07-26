@@ -71,7 +71,9 @@ Function Move-OneDriveItem {
         $rsp = Invoke-OneDriveApiCall -Path $p `
                                       -Method PATCH `
                                       -Body $body `
-                                      -AdditionalRequestHeaders @{ Prefer = "respond-async" }
+                                      -AdditionalRequestHeaders @{
+                                          Prefer = "respond-async"
+                                      }
 
         Write-Output $rsp | newOneDriveItem
     }

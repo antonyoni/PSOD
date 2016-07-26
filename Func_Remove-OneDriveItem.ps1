@@ -57,7 +57,8 @@ Function Remove-OneDriveItem {
 
         $rsp = Invoke-OneDriveApiCall -Path $p -Method DELETE
 
-        if ($rsp -is [string]) {utput $True
+        if ($rsp -is [string]) {
+            Write-Output $True
         } else {
             Write-Output $False
         }

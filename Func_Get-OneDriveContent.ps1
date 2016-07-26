@@ -48,7 +48,12 @@ Function Get-OneDriveContent {
     )
 
     Begin {
-        if (!$Destination) {
+        if ($Destination) {
+            if (!(Test-Path $Destination)) {
+                Write-Error "The destination directory '$Destination' does not exist."
+                break
+            }
+        } else {
             $Destination = Get-Location
         }
     }
@@ -61,21 +66,28 @@ Function Get-OneDriveContent {
             $item = Get-OneDriveItem -Path $Path
         }
 
-        if ($item.folder) {
-            $newDestination = Join-Path $Destination $item.name
-            New-Item -ItemType Directory -Path $newDestination | Out-Null
-            if ($ItemId) {
-                $children = Get-OneDriveChildItem -ItemId $ItemId
+        if ($item.Type -eq 'folder') {
+            $newDestination = Join-Path $Destination $item.Name
+            if (Test-Path $newDestination) {
+                Write-Error "Destination directory '$newDestination' already exists."
             } else {
-                $children = Get-OneDriveChildItem -Path $Path
-            }
-            $children | % {
-                Get-OneDriveContent -ItemId $_.id `
-                                    -Destination $newDestination
+                New-Item -ItemType Directory -Path $newDestination | Out-Null
+                if (Test-Path $newDestination) {
+                    if ($ItemId) {
+                        $children = Get-OneDriveChildItem -ItemId $ItemId
+                    } else {
+                        $children =  Get-OneDriveChildItem -Path $Path
+                    }
+                    $children | % {
+                        Get-OneDriveContent -ItemId $_.id -Destination $newDestination
+                    }
+                } else {
+                    Write-Warning "Unable to create new directory '$newDestination'."
+                }
             }
         } else {
-            $outFile = Join-Path $Destination $item.name
-            $dloadPath = joinPath $PSOD.drive.itemRoot $item.id
+            $outFile = Join-Path $Destination $item.Name
+            $dloadPath = joinPath $item.Root $item.Id
             $dloadPath = joinPath $dloadPath 'content'
             Invoke-OneDriveApiCall -Path $dloadPath -OutFile $outFile
         }
