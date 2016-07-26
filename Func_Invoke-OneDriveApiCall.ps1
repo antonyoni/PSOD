@@ -58,9 +58,15 @@ Function Invoke-OneDriveApiCall {
     )
 
     Begin {
-        if (!(Test-OneDriveAuthToken)) {
-            Write-Error "Unable to authenticate with OneDrive. Please check the configuration file."
-            break
+        if ((Get-Date) -ge $PSOD.token.ExpiryDate) {
+            Write-Verbose "Requesting new token."
+            $token = Get-OneDriveAuthToken
+            if ($token) {
+                $PSOD.token = $token 
+            } else {
+                Write-Error "Unable to authenticate with OneDrive. Please check the configuration file."
+                break
+            }
         }
     }
 
