@@ -50,12 +50,12 @@ Function New-OneDriveToken {
                    ParameterSetName='Token Details')]
         [int]$ExpiresIn,
 
-        # The requested authentication scope.
+        # The requested authentication scope(s).
         [Parameter(Mandatory=$True,
                    Position=4,
                    ValueFromPipelineByPropertyName=$True,
                    ParameterSetName='Token Details')]
-        [string]$Scope,
+        [string[]]$Scope,
 
         # The user ID of the requestor.
         [Parameter(Mandatory=$True,
@@ -71,7 +71,7 @@ Function New-OneDriveToken {
             $AccessToken = [regex]::Match($ResponseUrl, "access_token=(.+?)&").Groups[1].Value
             $Type        = [regex]::Match($ResponseUrl, "token_type=(.+?)&").Groups[1].Value
             $ExpiresIn   = [regex]::Match($ResponseUrl, "expires_in=(.+?)&").Groups[1].Value
-            $Scope       = [regex]::Match($ResponseUrl, "scope=(.+?)&").Groups[1].Value
+            $Scope       = [regex]::Match($ResponseUrl, "scope=(.+?)&").Groups[1].Value -split " "
             $UserId      = [regex]::Match($ResponseUrl, "user_id=(.+?)(&|$)").Groups[1].Value
         }
 
@@ -92,13 +92,3 @@ Function New-OneDriveToken {
 }
 
 Export-ModuleMember -Function 'New-OneDriveToken' -Alias 'odnt'
-
-<#
-Update-TypeData -PrependPath .\PSOD.ps1xml
-$rsp = "http://localhost:8080/#access_token=ABC123==&token_type=bearer&expires_in=3600&scope=onedrive.readwrite files.read&user_id=uid123"
-$token = New-OneDriveToken $rsp
-$token
-$token | Get-Member | Format-Table
-$rsp | New-OneDriveToken
-New-OneDriveToken -AccessToken "abc123" -Type "type" -ExpiresIn 1000 -Scope "tiny" -UserId "uid"
-#>
