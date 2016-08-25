@@ -125,29 +125,3 @@ Function Invoke-OneDriveApiCall {
 }
 
 Export-ModuleMember -Function 'Invoke-OneDriveApiCall'
-
-#. .\setup-test.ps1
-<#
-Invoke-OneDriveApiCall -Path 'drive' -Verbose
-'drive', 'drive' | Invoke-OneDriveApiCall
-Invoke-OneDriveApiCall -Path 'drive/view.recent'
-Invoke-OneDriveApiCall -Path 'http-error' -Verbose
-$PSOD.api.url = ''
-Invoke-OneDriveApiCall -Path 'error' -Verbose
-#>
-<#
-[pscustomobject]@{
-    Path  = 'drive/shared'
-} | Invoke-OneDriveApiCall
-Invoke-OneDriveApiCall -Path 'drive/root:/Documents:/children' `
-                       -Method Post `
-                       -Body ([ordered]@{
-                           name   = 'TestFolder'
-                           folder = @{}
-                       } | ConvertTo-Json) `
-                       -Verbose
-#>
-<#
-$PSOD.auth.applicationId = "abc123"
-Invoke-OneDriveApiCall -Path 'drive' -Verbose
-#>
