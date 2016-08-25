@@ -94,12 +94,3 @@ Function Get-OneDriveAuthToken {
 }
 
 Export-ModuleMember -Function 'Get-OneDriveAuthToken'
-
-<#
-. .\setup-test.ps1
-$token = Get-OneDriveAuthToken -Verbose
-$token | Get-Member
-$token
-$PSOD.auth.applicationId = 'ABC123'
-Get-OneDriveAuthToken -Verbose
-#>
