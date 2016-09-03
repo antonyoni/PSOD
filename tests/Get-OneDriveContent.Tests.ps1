@@ -58,7 +58,7 @@ Describe "Get-OneDriveContent" {
     Context "-> Alias" {
         It "works with the alias odgc" {
             $p = joinPath $path $file1
-            Get-OneDriveContent -Path $p -Destination $destination2
+            $p | odgc -Destination $destination2
             Join-Path $destination2 $file1 | Should Exist
         }
     }
