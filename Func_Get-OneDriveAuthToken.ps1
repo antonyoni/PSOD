@@ -65,9 +65,12 @@ Function Get-OneDriveAuthToken {
 
         $browser.Add_DocumentCompleted({
             ${Global:$tempVar} = [System.Web.HttpUtility]::UrlDecode($browser.Url.AbsoluteUri)
-            Write-Verbose ${Global:$tempVar}
+            Write-Verbose "Response URI: ${Global:$tempVar}"
             switch (${Global:$tempVar}) {
                 {$_ -match 'error=|access_token=[^&]'} {
+                    $form.Close()
+                }
+                {$_ -eq $requestUri} {
                     $form.Close()
                 }
             }
@@ -82,6 +85,8 @@ Function Get-OneDriveAuthToken {
             $errId  = [regex]::Match(${Global:$tempVar}, "error=(.+?)&").Groups[1].Value
             $errMsg = [regex]::Match(${Global:$tempVar}, "error_description=(.+?)(&|$)").Groups[1].Value
             Write-Error "$errMsg ($errId)"
+        } elseif (${Global:$tempVar} -eq $requestUri) {
+            Write-Error "An error occured when navigating to the login page."
         } else {
             $token = New-OneDriveToken -ResponseUrl ${Global:$tempVar}
         }
