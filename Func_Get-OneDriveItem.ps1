@@ -57,6 +57,8 @@ Function Get-OneDriveItem {
 
         $rsp = Invoke-OneDriveApiCall -Path $p
 
+        Write-Verbose $rsp
+
         if ($rsp) {
             Write-Output $rsp | newOneDriveItem
         }
@@ -65,13 +67,3 @@ Function Get-OneDriveItem {
 }
 
 Export-ModuleMember -Function 'Get-OneDriveItem' -Alias 'odgi'
-
-#. .\setup-test.ps1
-<#
-Get-OneDriveItem -Verbose
-"Documents/" | Get-OneDriveItem -Verbose
-#>
-<#
-Get-OneDriveItem -ItemId '85B75A4CE0397EE!110' -Verbose
-[pscustomobject]@{ id = '85B75A4CE0397EE!1436' } | Get-OneDriveItem -Verbose
-#>
