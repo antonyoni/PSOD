@@ -127,26 +127,3 @@ Function Set-OneDriveContent {
 }
 
 Export-ModuleMember -Function 'Set-OneDriveContent' -Alias 'odsc'
-
-#. .\setup-test.ps1
-<#
-cd "C:\Temp"
-$newItem = Set-OneDriveContent -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose
-$newItem
-Set-OneDriveContent -Path "temp/another1" -Source 'C:\Temp\test1.pdf' -Verbose
-Set-OneDriveContent -Path "temp/another2/" -Source 'C:\Temp\test1.pdf' -Verbose
-Set-OneDriveContent -Path "temp/temp.pdf" -Source 'C:\Temp\test1.pdf' -Verbose
-#test overwrite - should fail
-Set-OneDriveContent -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose
-Set-OneDriveContent -Path "temp" -Source 'C:\Temp\test1.pdf' -Verbose -Force
-#upload by id of destination directory:
-$dir = Get-OneDriveItem -Path 'temp'
-Set-OneDriveContent -ItemId $dir.id -Source 'C:\Temp\test3.pdf' -Verbose
-#upload by id of destination file:
-$etagbf = (Get-OneDriveItem -id $newItem.id).etag
-Set-OneDriveContent -ItemId $newItem.id -Source 'C:\Temp\test1.pdf' -Verbose -Force
-$etagaf = (Get-OneDriveItem -id $newItem.id).etag
-$etagbf
-$etagaf
-$etagbf -ne $etagaf
-#>
