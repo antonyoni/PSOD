@@ -27,32 +27,34 @@ Describe "Get-OneDriveAuthToken" {
     }
 
     Context "-> handles errors correctly" {
-
+        
+        $appId = $PSOD.auth.applicationId
         $PSOD.auth.applicationId = ''
 
+        try {
+            $token = Get-OneDriveAuthToken -ErrorAction Stop
+        } catch {
+            $err = $_
+        }
+
         It "does not return a token" {
-            $token = Get-OneDriveAuthToken
-            $token | Should Be $null
+            $token | Should BeNullOrEmpty
         }
 
         It "returns error based on the return URL" {
-            try {
-                $token = Get-OneDriveAuthToken
-            } catch {
-                $_
-            }
-            $Error.Count | Should BeExactly 1
+            $err.Exception.Message -match 'client_id' | Should Be $true
         }
 
-        $PSOD.auth.signInUrl =  ''
+        $PSOD.auth.applicationId = $appId
+        $PSOD.auth.signInUrl =  'http://does-not-exist/'
 
         It "handles HTTP errors correctly" {
             try {
-                $token = Get-OneDriveAuthToken
+                $token = Get-OneDriveAuthToken -ErrorAction Stop
             } catch {
-                $_
+                $err = $_
             }
-            $Error.Count | Should BeExactly 1
+            $err.Exception.Message | Should Be 'An error occured when navigating to the login page.'
         }
     }
 
