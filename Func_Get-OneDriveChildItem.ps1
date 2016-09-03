@@ -70,20 +70,3 @@ Function Get-OneDriveChildItem {
 }
 
 Export-ModuleMember -Function 'Get-OneDriveChildItem' -Alias 'odgci', 'odls'
-
-#. .\setup-test.ps1
-<#
-Get-OneDriveChildItem -Verbose
-"Documents" | Get-OneDriveChildItem -Verbose
-Get-OneDriveChildItem -Path "Documents/Office Lens" -Verbose
-#>
-<#
-Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!110' -Verbose
-Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!1436' -Verbose
-#error:
-Get-OneDriveChildItem -ItemId '85B75A4CE0397EE!999' -Verbose
-#>
-<#
-Get-OneDriveChildItem -Recurse
-Get-OneDriveChildItem -Path "Documents" -Verbose -Recurse
-#>
