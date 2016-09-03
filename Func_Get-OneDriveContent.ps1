@@ -73,12 +73,7 @@ Function Get-OneDriveContent {
             } else {
                 New-Item -ItemType Directory -Path $newDestination | Out-Null
                 if (Test-Path $newDestination) {
-                    if ($ItemId) {
-                        $children = Get-OneDriveChildItem -ItemId $ItemId
-                    } else {
-                        $children =  Get-OneDriveChildItem -Path $Path
-                    }
-                    $children | % {
+                    Get-OneDriveChildItem -id $item.id | % {
                         Get-OneDriveContent -ItemId $_.id -Destination $newDestination
                     }
                 } else {
@@ -87,7 +82,7 @@ Function Get-OneDriveContent {
             }
         } else {
             $outFile = Join-Path $Destination $item.Name
-            $dloadPath = joinPath $item.Root $item.Id
+            $dloadPath = joinPath $PSOD.drive.itemRoot $item.Id
             $dloadPath = joinPath $dloadPath 'content'
             Invoke-OneDriveApiCall -Path $dloadPath -OutFile $outFile
         }
@@ -97,13 +92,3 @@ Function Get-OneDriveContent {
 }
 
 Export-ModuleMember -Function 'Get-OneDriveContent' -Alias 'odgc'
-
-#. .\setup-test.ps1
-<#
-cd "C:\Temp"
-Get-OneDriveContent -Path "Documents\Office Lens\28062016 2201 Office Lens.pdf"
-Get-OneDriveContent -Path "Documents\Office Lens\28062016 2149 Office Lens.pdf" -Destination "c:\temp\other"
-Get-OneDriveContent -ItemId "85B75A4CE0397EE!1399" -Verbose
-Get-OneDriveContent -ItemId '85B75A4CE0397EE!1436' -Verbose
-Get-OneDriveContent -Path "Documents"
-#>
