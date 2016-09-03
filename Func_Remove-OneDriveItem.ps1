@@ -68,13 +68,3 @@ Function Remove-OneDriveItem {
 }
 
 Export-ModuleMember -Function 'Remove-OneDriveItem' -Alias 'odrm', 'oddel'
-
-#. .\setup-test.ps1
-<#
-Remove-OneDriveItem "temp/another1"
-Remove-OneDriveItem "temp/another2"
-"temp/temp.pdf" | Remove-OneDriveItem
-"temp/temp.pdf" | Remove-OneDriveItem #fails
-Remove-OneDriveItem -ItemId "85B75A4CE0397EE!1482"
-Remove-OneDriveItem -id "85B75A4CE0397EE!1489"
-#>
