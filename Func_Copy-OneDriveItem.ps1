@@ -77,17 +77,10 @@ Function Copy-OneDriveItem {
                                           Prefer = "respond-async"
                                       }
 
+        # TODO: Implement a way to check when a copy is finished.
         Write-Output $rsp
     }
 
 }
 
 Export-ModuleMember -Function 'Copy-OneDriveItem' -Alias 'odcp', 'odcopy'
-
-#. .\setup-test.ps1
-<#
-Copy-OneDriveItem "temp/test3.pdf" "temp/dest" -Verbose
-"temp/Document1.docx" | Copy-OneDriveItem -destination "dontexist" -Verbose
-Copy-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "temp/dest" -Verbose
-Copy-OneDriveItem "temp/copy" "temp/dest" -Verbose
-#>
