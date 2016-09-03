@@ -2,10 +2,10 @@
 # Author     : Antony Onipko
 # Copyright  : (c) 2016 Antony Onipko. All rights reserved.
 ################################################################################
-# This work is licensed under the Creative Commons
-# Attribution-NonCommercial-ShareAlike 4.0 International License.
+# This work is licensed under the
+# Creative Commons Attribution-ShareAlike 4.0 International License.
 # To view a copy of this license, visit
-# https://creativecommons.org/licenses/by-nc-sa/4.0/
+# https://creativecommons.org/licenses/by-sa/4.0/
 ################################################################################
 #
 # Module manifest for the PowerShell OneDrive API wrapper 'PSOD'.
@@ -137,7 +137,7 @@ PrivateData = @{
         # Tags = @()
 
         # A URL to the license for this module.
-        LicenseUri = 'https://creativecommons.org/licenses/by-nc-sa/4.0/'
+        LicenseUri = 'https://creativecommons.org/licenses/by-sa/4.0/'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://gitlab.com/antonyoni/PSOD'
