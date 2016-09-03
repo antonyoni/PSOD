@@ -58,7 +58,7 @@
         <Name>Length</Name>
         <ReferencedMemberName>size</ReferencedMemberName>
       </AliasProperty>
-      <!-- The link times out, so should use odgc.
+      <!-- The link expires, so should use odgc.
       <ScriptMethod>
         <Name>Save</Name>
         <Script>
