@@ -19,7 +19,7 @@ Describe "Copy-OneDriveItem" {
     $folder2 = "PSOD/odcp/Folder2"
     $folder3 = "PSOD/odcp/DestinationFolder"
 
-    $timeToCopy = 3 # Seconds. Increase if getting test failures.
+    $timeToCopy = 5 # Seconds. Increase if getting test failures.
 
     It "check test folder setup (if this fails, results might not be accurate)" {
         $rsp = Get-OneDriveChildItem -Path $path -Recurse
