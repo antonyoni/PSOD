@@ -94,4 +94,12 @@ Describe "Copy-OneDriveItem" {
         }
     }
 
+    Context "-> Correctly sets parameters for Invoke-RestMethod" {
+        Mock -ModuleName PSOD Invoke-RestMethod { return $Headers }
+        It "Additional Headers" {
+            $m = Copy-OneDriveItem -Path "test-path" -Destination "test-destination"
+            $m['Prefer'] | Should Be 'respond-async'
+        }
+    }
+
 }
