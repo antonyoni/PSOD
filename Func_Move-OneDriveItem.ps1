@@ -81,12 +81,3 @@ Function Move-OneDriveItem {
 }
 
 Export-ModuleMember -Function 'Move-OneDriveItem' -Alias 'odmv', 'odmove'
-
-#. .\setup-test.ps1
-<#
-Move-OneDriveItem "temp/test3.pdf" "temp/move" -Verbose
-"temp/Document1.docx" | Move-OneDriveItem -destination "temp/move" -Verbose
-Move-OneDriveItem "doesntexist" "temp/move" -Verbose
-Move-OneDriveItem -ItemID "85B75A4CE0397EE!1492" -destination "temp" -Verbose
-Move-OneDriveItem "temp/move" "temp/move-dir" -Verbose
-#>
