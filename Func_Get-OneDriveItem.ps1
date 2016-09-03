@@ -57,8 +57,6 @@ Function Get-OneDriveItem {
 
         $rsp = Invoke-OneDriveApiCall -Path $p
 
-        Write-Verbose $rsp
-
         if ($rsp) {
             Write-Output $rsp | newOneDriveItem
         }
