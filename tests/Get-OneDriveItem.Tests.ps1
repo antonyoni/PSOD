@@ -12,16 +12,15 @@
 
 Describe "Get-OneDriveItem" {
 
-    $path   = "Documents"
-    $itemId = ""
-
     It "gets the default drive root by default" {
         $rsp = Get-OneDriveItem
         $rsp.name | Should Be "root"
     }
 
+    $path     = "PSOD"
+    $itemId   = ""
     $response = Get-OneDriveItem -Path $path
-    $itemId = $response.id
+    $itemId   = $response.id
 
     It "gets item by path" {
         $response.name | Should Be $path

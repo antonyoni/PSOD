@@ -12,7 +12,7 @@
 
 Describe "Get-OneDriveChildItem" {
 
-    $path   = "PSOD-odgci" # Folder containing one folder, two documents, 7 item recursively
+    $path   = "PSOD/odgci" # Folder containing one folder, two documents, 7 item recursively
     $itemId = (Get-OneDriveItem $path).Id
 
     It "gets children of the drive root by default" {
