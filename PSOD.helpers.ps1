@@ -44,7 +44,7 @@ Function newOneDriveItem {
 
     Process {
 
-        if ($ApiResponse.value) {
+        if ($ApiResponse.PsObject.Properties['value']) {
             $val = $ApiResponse.value
         } else {
             $val = $ApiResponse
