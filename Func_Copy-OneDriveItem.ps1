@@ -78,7 +78,9 @@ Function Copy-OneDriveItem {
                                       }
 
         # TODO: Implement a way to check when a copy is finished.
-        Write-Output $rsp
+        if ($rsp) {
+            Write-Output $rsp
+        }
     }
 
 }

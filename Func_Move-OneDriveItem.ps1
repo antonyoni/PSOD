@@ -75,7 +75,9 @@ Function Move-OneDriveItem {
                                           Prefer = "respond-async"
                                       }
 
-        Write-Output $rsp | newOneDriveItem
+        if ($rsp) {
+            Write-Output $rsp | newOneDriveItem
+        }
     }
 
 }
