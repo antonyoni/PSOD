@@ -43,7 +43,7 @@ The Application Id obtained during setup can be added directly to this file, how
 
 ### Examples
 
-##### Get details of an OneDrive item or folder
+#### Get details of an OneDrive item or folder
 ```powershell
 Get-OneDriveItem -Path Documents
 # or
@@ -60,14 +60,14 @@ Type           LastModifiedTime         Length Name
 folder         26/08/2016 01:15       54854799 Documents  
 ```
 
-##### Recursively list all the items and folders in the 'Documents' folder
+#### Recursively list all the items and folders in the 'Documents' folder
 ```powershell
 Get-OneDriveChildItem -Path Documents -Recurse
 # or
 odgci 'Documents' -rec
 ```
 
-##### Download a file or directory 
+#### Download a file or directory 
 ```powershell
 # Download to the current directory
 Get-OneDriveContent -Path "Documents/document.docx"
@@ -79,7 +79,7 @@ Get-OneDriveContent -Path "Documents/document.docx" -Destination "c:\local\dir"
 Get-OneDriveContent -Path "Documents" -Destination "c:\local\dir"
 ```
 
-##### Upload a local file 
+#### Upload a local file 
 ```powershell
 Set-OneDriveContent -Path "OneDrive/Remote/Path" -Source "c:\path\to\file.txt"
 # or
@@ -87,7 +87,7 @@ odsc "OneDrive/Remote/Path" "c:\path\to\file.txt"
 ```
 Note that if the remote directory does not exist, the script will treat the leaf of the *Path* as the remote file name. So in this example, if 'OneDrive/Remote/Path' does not exist, then the script will create a new file called 'Path' in 'OneDrive/Remote' and upload the contents of `file.txt` to it. To avoid this, add a '/' to the end of the *Path*.
 
-##### Upload a local directory
+#### Upload a local directory
 ```powershell
 $FolderToUpload  = 'C:\Temp\Folder1'
 $DestinationPath = 'PSOD/Test'
@@ -131,7 +131,7 @@ Type           LastModifiedTime         Length Name
 file           04/09/2016 15:16         405935 test3.pdf      
 ```
 
-##### Move file or directory from one location to another
+#### Move file or directory from one location to another
 ```powershell
 Move-OneDriveItem -Path Documents/psod.docx -Destination Documents/PSOD
 # or
