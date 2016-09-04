@@ -70,7 +70,7 @@ Function Get-OneDriveAuthToken {
                 {$_ -match 'error=|access_token=[^&]'} {
                     $form.Close()
                 }
-                {$_ -eq $requestUri} {
+                {$browser.DocumentTitle -eq 'Navigation Canceled'} {
                     $form.Close()
                 }
             }
