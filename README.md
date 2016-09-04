@@ -12,7 +12,7 @@ A temporary application token can be obtained on that page to test this module. 
 * Click on 'Add an app'
 * Enter a name - PSOD
 * Click on 'Add Platform' > Web
-* Tick the 'Allow Implicit Flow' box and enter `https://login.live.com/oauth20_desktop.srf` in the 'Redirect URIs' box
+* Tick the 'Allow Implicit Flow' box and enter `http://localhost:8080` in the 'Redirect URIs' box
 * Tick the 'Live SDK support' box at the bottom of the page
 * Click Save
 * Copy the 'Application Id' at the top of the page and save it in the PSOD module directory in a file called `onedrive.opt`
