@@ -1,6 +1,6 @@
 # PSOD - PowerShell OneDrive API wrapper
 
-This module is a wrapper for OneDrive API 2.0.
+This module is a wrapper for [OneDrive API 2.0](http://dev.onedrive.com/).
 
 ### Installation and Prerequisites
 
@@ -21,29 +21,29 @@ The module uses the [Token Flow](https://dev.onedrive.com/auth/msa_oauth.htm#tok
 
 ### Configuration
 
-The module has a configuration file [PSOD.config.json](PSOD.config.json). The configuration is set up for OneDrive personal. It's possible to change the path and item roots when using the non-default drive. Currently, no testing has been done with OneDrive for Business.
+The module has a configuration file [PSOD.config.json](PSOD.config.json). The configuration is set up for OneDrive personal. It's possible to change the path and item roots if using a non-default drive. Currently, no testing has been done with OneDrive for Business.
 
-The application ID obtained can be added to this file, or to avoid it from being committed to Git, use the `onedrive.opt` file.
+The Application Id obtained during setup can be added directly to this file, however to avoid it from being committed to Git, use the `onedrive.opt` file.
 
 ### Available Functions
 
 | Function | Alias | Description |
-|   :---:  | :---: |:------------|
+|:---------| :---: |:------------|
 | `Copy-OneDriveItem` | `odcp`, `odcopy` | Copies an item from one path to another. |
-| `Get-OneDriveAuthToken` | | Gets an authorization token for the application defined in the `PSOD.config.json` or `onedrive.opt` file.<br>By default, the onedrive.readwrite permissions are requested. |
-| `Get-OneDriveChildItem` | `odgci`, `odls` | Gets the items in the specified path, or that are children of the specified ItemId.<br>By default gets items in the default drive's root.<br>Can be used with either a path, or an item id. |
-| `Get-OneDriveContent` | `odgc` | Downloads the contents of an item and saves it to the specified destination. If no destination is specified, the current directory is used.<br>Can be used with files or folders. If used with a folder, will recreate the folder structure locally. |
-| `Get-OneDriveItem` | `odgi` | Gets item (folder/file) details from the OneDrive API.<br>By default gets the default drive's root.<br>Can be used with either a path, or an item id. |
+| `Get-OneDriveAuthToken` | | Gets an authorization token for the application defined in the `PSOD.config.json` or `onedrive.opt` file.<br>By default, *onedrive.readwrite* permissions are requested. |
+| `Get-OneDriveChildItem` | `odgci`, `odls` | Gets all items in the specified *Path*, or that are children of the specified *ItemId*.<br>By default, gets items in the default drive's root. |
+| `Get-OneDriveContent` | `odgc` | Downloads the contents of an item and saves it to the specified *Destination*. If no destination is specified, the current directory is used.<br>Can be used with files or folders. If used with a folder, will recreate the folder structure locally. |
+| `Get-OneDriveItem` | `odgi` | Gets item (folder/file) details from the OneDrive API.<br>By default gets the default drive's root.<br>Can be used with either a *Path*, or an *ItemId*. |
 | `Invoke-OneDriveApiCall` | | Wrapper for Invoke-RestMethod to send commands to the OneDrive API. |
-| `Move-OneDriveItem` | `odmv`,`odmove` | Move an item from one folder to another. |
-| `New-OneDriveFolder` | `odnf`, `odmkdir` | Create a new folder in the specified location.<br>Can be used with either a path, or with a Name and ParentId.<br>If used with path, will recursively create all folders.<br>If folder already exists, returns the item details. |
+| `Move-OneDriveItem` | `odmv`,`odmove` | Move an item from one path to another. |
+| `New-OneDriveFolder` | `odnf`, `odmkdir` | Create a new folder in the specified location.<br>Can be used with either a *Path*, or with a *Name* and *ParentId*.<br>If used with path, will recursively create all folders.<br>If folder already exists, returns the item details. |
 | `New-OneDriveToken` | `odnt` | Creates a new OneDrive Authentication token from an API response. |
 | `Remove-OneDriveItem` | `odrm`, `oddel` | Deletes the specified item from OneDrive. |
-| `Set-OneDriveContent` | `odsc` | Uploads a new file, or updates the contents of an existing file.<br>Works with files only.<br>Recursively creates all folders in path.<br>Add a '/' to the end of the path if you're uploading to a directory that does not exist; otherwise, the path leaf is considered the remote file name. |
+| `Set-OneDriveContent` | `odsc` | Uploads a new file, or updates the contents of an existing file. Currently works with files only.<br>Recursively creates all folders in *Path*.<br>Add a '/' to the end of the *Path* if you're uploading to a directory that does not exist; otherwise, the path leaf is used as the remote file name. |
 
 ### Examples
 
-###### Get details of an OneDrive item or folder
+##### Get details of an OneDrive item or folder
 ```powershell
 Get-OneDriveItem -Path Documents
 # or
@@ -60,14 +60,14 @@ Type           LastModifiedTime         Length Name
 folder         26/08/2016 01:15       54854799 Documents  
 ```
 
-###### Recursively list all the items and folders in the 'Documents' folder
+##### Recursively list all the items and folders in the 'Documents' folder
 ```powershell
 Get-OneDriveChildItem -Path Documents -Recurse
 # or
 odgci 'Documents' -rec
 ```
 
-###### Download a file or directory 
+##### Download a file or directory 
 ```powershell
 # Download to the current directory
 Get-OneDriveContent -Path "Documents/document.docx"
@@ -75,20 +75,19 @@ Get-OneDriveContent -Path "Documents/document.docx"
 Get-OneDriveContent -Path "Documents/document.docx" -Destination "c:\local\dir" 
 # or
 "Documents/document.docx", "Documents/workbook.xlsx" | odgc
-
 # Recursively download an entire directory - same as a file
 Get-OneDriveContent -Path "Documents" -Destination "c:\local\dir"
 ```
 
-###### Upload a local file 
+##### Upload a local file 
 ```powershell
 Set-OneDriveContent -Path "OneDrive/Remote/Path" -Source "c:\path\to\file.txt"
 # or
 odsc "OneDrive/Remote/Path" "c:\path\to\file.txt"
 ```
-Note that if the remote directory does not exist, the script will treat the leaf of the Path as the remote file name. So in this example, if 'OneDrive/Remote/Path' does not exist, then the script will create a new file called 'Path' in 'OneDrive/Remote' and upload the contents of `file.txt` to it. To avoid this, add a '/' to the end of the Path.
+Note that if the remote directory does not exist, the script will treat the leaf of the *Path* as the remote file name. So in this example, if 'OneDrive/Remote/Path' does not exist, then the script will create a new file called 'Path' in 'OneDrive/Remote' and upload the contents of `file.txt` to it. To avoid this, add a '/' to the end of the *Path*.
 
-###### Upload a local directory
+##### Upload a local directory
 ```powershell
 $FolderToUpload  = 'C:\Temp\Folder1'
 $DestinationPath = 'PSOD/Test'
@@ -132,7 +131,7 @@ Type           LastModifiedTime         Length Name
 file           04/09/2016 15:16         405935 test3.pdf      
 ```
 
-###### Move file or directory from one location to another
+##### Move file or directory from one location to another
 ```powershell
 Move-OneDriveItem -Path Documents/psod.docx -Destination Documents/PSOD
 # or
@@ -141,7 +140,7 @@ Move-OneDriveItem -Path Documents/psod.docx -Destination Documents/PSOD
 
 ### Testing
 
-The 'tests' folder contains [Pester](https://github.com/pester/Pester) tests for all the functions. There is a `setup-test.ps1` file that is run before a Describe block to set up the module and helper functions. If `testing.bootstrap` is set to true in the `PSOD.config.json` file, then this file also sets up the required folders and dummy files in OneDrive. The test folder structure is:
+The `tests` folder contains [Pester](https://github.com/pester/Pester) tests for all the functions. There is a `setup-test.ps1` file that is run before a `Describe` block to set up the module and helper functions. If `testing.bootstrap` is set to `true` in the `PSOD.config.json` file, then this file also sets up the required folders and dummy files in OneDrive. The test folder structure is:
 
 ```
 ┬ PSOD
@@ -163,43 +162,7 @@ The 'tests' folder contains [Pester](https://github.com/pester/Pester) tests for
 └─── odsc
 ```
 
-* PSOD
-  * odcp
-    * DestinationFolder
-    * Folder1
-      * doc1.docx
-      * excel1.xlsx
-    * Folder2
-  * odgci
-    * Subfolder1
-      * Subfolder2
-        * doc1.docx
-      * doc1.docx
-      * excel1.xlsx
-    * doc1.docx
-    * excel1.xlsx
-  * odrm
-  * odsc
-
-```
-PSOD
-  odcp
-    DestinationFolder
-    Folder1
-      doc1.docx
-      excel1.xlsx
-    Folder2
-  odgci
-    Subfolder1
-      Subfolder2
-        doc1.docx
-      doc1.docx
-      excel1.xlsx
-    doc1.docx
-    excel1.xlsx
-  odrm
-  odsc
-```
+Once an Application Id has been obtained, navigate to the `tests` directory and run `Invoke-Pester` to ensure that the module is working correctly.
 
 ### License
 
