@@ -24,6 +24,9 @@ Function Set-OneDriveContent {
 
         .EXAMPLE
         Set-OneDriveContent -ItemId "85B75A4CE0397EE!1450" -Source 'C:\Temp\test.pdf'
+
+        .NOTES
+        Add a '/' to the end of the path if you're uploading to a directory that does not exist; otherwise, the path leaf is considered the remote file name.
     #>
     [CmdletBinding(DefaultParameterSetName='Item Path')]
     [Alias('odsc')]
