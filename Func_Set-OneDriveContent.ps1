@@ -73,11 +73,7 @@ Function Set-OneDriveContent {
                 return
             }
         } else {
-            try {
-                $remote = Get-OneDriveItem -Path $Path
-            } catch {
-                # supress errors. OneDrive creates the full path if it doesn't exist.
-            }
+            $remote = Get-OneDriveItem -Path $Path -ErrorAction SilentlyContinue
         }
 
         if (!$remote -and !$Path.EndsWith('/')) {
