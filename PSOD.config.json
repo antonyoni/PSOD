@@ -10,5 +10,8 @@
     "drive": {
         "pathRoot": "drive/root:/",
         "itemRoot": "drive/items/"
+    },
+    "testing": {
+        "bootstrap": true
     }
 }
