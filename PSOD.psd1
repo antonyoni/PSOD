@@ -36,7 +36,8 @@ Author = 'Antony Onipko'
 Copyright = '(c) 2016 Antony Onipko. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Powershell wrapper for the OneDrive REST API.'
+Description = 'Powershell wrapper for the OneDrive REST API 2.0.
+For more information on how to configure and use this module please see the project site: https://github.com/antonyoni/PSOD'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '4.0'
@@ -129,7 +130,26 @@ AliasesToExport = @(
 # ModuleList = @()
 
 # List of all files packaged with this module
-# FileList = @()
+FileList = @(
+    'Func_Copy-OneDriveItem.ps1'
+    'Func_Get-OneDriveAuthToken.ps1'
+    'Func_Get-OneDriveChildItem.ps1'
+    'Func_Get-OneDriveContent.ps1'
+    'Func_Get-OneDriveItem.ps1'
+    'Func_Invoke-OneDriveApiCall.ps1'
+    'Func_Move-OneDriveItem.ps1'
+    'Func_New-OneDriveFolder.ps1'
+    'Func_New-OneDriveToken.ps1'
+    'Func_Remove-OneDriveItem.ps1'
+    'Func_Set-OneDriveContent.ps1'
+    'PSOD.config.json'
+    'PSOD.format.ps1xml'
+    'PSOD.helpers.ps1'
+    'PSOD.ps1xml'
+    'PSOD.psd1'
+    'PSOD.psm1'
+    'ReleaseNotes.md'
+)
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -137,7 +157,10 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @(
+            'OneDrive'
+            'Storage'
+        )
 
         # A URL to the license for this module.
         LicenseUri = 'https://creativecommons.org/licenses/by-sa/4.0/'
@@ -149,7 +172,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'https://github.com/antonyoni/PSOD/blob/master/ReleaseNotes.md'
 
     } # End of PSData hashtable
 
