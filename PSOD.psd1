@@ -172,7 +172,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'https://github.com/antonyoni/PSOD/blob/master/ReleaseNotes.md'
+        ReleaseNotes = 'https://github.com/antonyoni/PSOD/blob/master/CHANGELOG.md'
 
     } # End of PSData hashtable
 
