@@ -85,9 +85,10 @@ Properties {
         'tests',
         '.git*',
         '.vscode',
+        'build.ps1',
+        'CHANGELOG.md',
         'onedrive.opt',
-        'README.md',
-        'Build.ps1'
+        'README.md'
     )
 
     # Name of the repository you wish to publish to. Default repo is the PSGallery.
