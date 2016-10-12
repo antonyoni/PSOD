@@ -8,7 +8,7 @@
 # https://creativecommons.org/licenses/by-sa/4.0/
 ################################################################################
 
-. .\setup-test.ps1
+. $PSScriptRoot\setup-test.ps1
 
 Describe "Get-OneDriveAuthToken" {
 
